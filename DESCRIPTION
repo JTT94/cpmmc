@@ -11,6 +11,8 @@ Encoding: UTF-8
 LazyData: true
 Suggests: knitr,
     rmarkdown,
-    testthat
+    testthat,
+    sweave2knitr,
+    texi2dvi
 VignetteBuilder: knitr
 RoxygenNote: 6.1.0
