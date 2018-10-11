@@ -1,6 +1,4 @@
 \documentclass{article}
-\documentclass{article}
-\documentclass{article}
 
 \usepackage{amsmath, amsthm, amssymb}
 \usepackage[round]{natbib}
@@ -12,7 +10,6 @@
 \author{Robin Hood \and Maid Marion \and Will Scarlett}
 
 \begin{document}
-\SweaveOpts{concordance=TRUE}
 
 \maketitle
 
@@ -24,13 +21,14 @@ We present the R package `testpkg', which does some useful things.
 
 Here is a nice description of the background.
 
-Suppose we wish to find the root of the function $f(x) = x^3 - x - 1$, which lies
+Suppose we wish to find the root of the function $f(x) = x^3 - x - 1$, which lies 
 between 1 and 2.
-% below is a code chunk. You don't have to give it a name, but if you do
+% below is a code chunk. You don't have to give it a name, but if you do 
 % it MUST be unique.
 <<chunkname>>=
+library(testpkg)
 f = function(x) x^3 - x - 1
-
+newton(f, start=1)
 @
 You can do plots and they'll automatically be added to your document.
 <<chunkname2>>=
@@ -39,7 +37,7 @@ plot(f, 1, 2)
 
 \section{A Bit About knitr}
 
-The code chunks you put in don't have to be displayed (and nor does the output),
+The code chunks you put in don't have to be displayed (and nor does the output), 
 if they are displayed they don't have to be evalutated.  To the next chunk I added
 the option \verb|eval=FALSE|
 <<chunk3, eval=FALSE>>=
@@ -49,7 +47,7 @@ This code is evaluated, I just choose not to display the output:
 <<chunk4, results='hide'>>=
 5+5
 @
-And finally you might want your code to be evaluated but not displayed (useful for
+And finally you might want your code to be evaluated but not displayed (useful for 
 changing options without displaying in your document):
 <<chunk5, echo=FALSE>>=
 options(width=100)
@@ -57,7 +55,7 @@ options(width=100)
 
 \section{\LaTeX}
 
-\LaTeX itself is complicated if you've never used it before, but I'm sure you'll
+\LaTeX itself is complicated if you've never used it before, but I'm sure you'll 
 pick it up quickly: there are a lot of guides on the web.  I recommend using the
 \texttt{align} environment (in the \texttt{amsmath} package) for displayed equations:
 \begin{align*}
@@ -68,7 +66,7 @@ g(y) &= y^4 + 2y
 
 You can cite in two ways using the \texttt{natbib} package:
 \citep{articlekey}
-and
+and 
 \citet{articlekey}.
 
 % now generate the bibliography from file mybib.bib
