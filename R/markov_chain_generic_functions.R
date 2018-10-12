@@ -23,7 +23,7 @@ single_mh_step <- function(object){
 #' @param object, markov chain object e.g. cpmmc
 #' @param N, number of samples from posterior
 #' @return list, proposal state and accepted state
-run_mh <- function(object, N) {
+run_mh <- function(object, nsim) {
   UseMethod('run_mh')
 }
 

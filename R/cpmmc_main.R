@@ -138,9 +138,9 @@ single_mh_step.cpmmc <- function(object){
 #' @param N number of samples from posterior
 #' @return object, with chains of parameters updated
 #' @export
-run_mh.cpmmc <- function(object, N) {
+run_mh.cpmmc <- function(object, nsim) {
   # iterate through MH steps
-  for (i in 1:N) {
+  for (i in seq_len(nsim)) {
     object <- single_mh_step(object)
   }
 
