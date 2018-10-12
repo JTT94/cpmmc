@@ -118,7 +118,7 @@ single_mh_step.cpmmc <- function(object){
     accept_param <- latest_state
   }
 
-  # set proposal and latest state
+  # set proposal and latest state within object
   object$chain_length <- object$chain_length + 1
   object$accept_chain[[object$chain_length]] <- accept_param
   object$accept_chain[[object$chain_length-1]] <- proposal_param

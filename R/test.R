@@ -16,3 +16,15 @@ for(i in 1:5000){
   cpmmc_obj <- single_mh_step(cpmmc_obj)
   print(length(cpmmc_obj$accept_chain))
 }
+
+sapply(cpmmc_obj$accept_chain, function(x) x$u[[1]])
+
+
+func <- function(x) x
+func <- function(x){
+  x
+}
+
+func <- function(x){
+  return(x)
+}
