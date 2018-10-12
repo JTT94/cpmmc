@@ -1,0 +1,92 @@
+\documentclass{article}
+
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage[round]{natbib}
+
+% The line below tells R to use knitr on this.
+%\VignetteEngine{knitr::knitr}
+
+\title{An R Implementation for Correlated Pseudo Marginal Monte Carlo Methods}
+  \author{James Thornton \and Yuxi Jiang}
+
+  \begin{document}
+
+
+  \maketitle
+
+  \begin{abstract}
+  We present the R package `testpkg', which does some useful things.
+  \end{abstract}
+
+  \section{Introduction}
+
+  Here is a nice description of the background.
+
+  Suppose we wish to find the root of the function $f(x) = x^3 - x - 1$, which lies
+  between 1 and 2.
+  % below is a code chunk. You don't have to give it a name, but if you do
+  % it MUST be unique.
+  <<chunkname>>=
+  f = function(x) x^3 - x - 1
+  @
+
+  You can do plots and they'll automatically be added to your document.
+  <<chunkname2>>=
+    plot(f, 1, 2)
+  @
+
+  \section{Methodology}
+
+    \subsection{Correlated Pseudo Marginal Scheme}
+    -- why it works
+    -- variance of ratio etc,
+
+  The code chunks you put in don't have to be displayed (and nor does the output),
+  if they are displayed they don't have to be evalutated.  To the next chunk I added
+  the option \verb|eval=FALSE|
+
+    <<chunk3, eval=FALSE>>=
+    rnorm(1e6)
+  @
+    This code is evaluated, I just choose not to display the output:
+    <<chunk4, results='hide'>>=
+    5+5
+  @
+    And finally you might want your code to be evaluated but not displayed (useful for changing options without displaying in your document):
+    <<chunk5, echo=FALSE>>=
+    options(width=100)
+  @
+    \subsection{Random Effect Model}
+
+      \texttt{align} environment (in the \texttt{amsmath} package) for displayed equations:
+      \begin{align*}
+      % lose the *'s if you want equation numbers
+      f(x) &= x^3 - x - 1\\
+      g(y) &= y^4 + 2y
+      \end{align*}
+
+    \subsection{Discussion}
+    -- Theory weak points
+    -- Implementation weak points. inefficiencies
+
+
+
+  \section{Application}
+
+    \subsection{Simulation Study}
+
+  \section{Conclusion}
+
+
+
+  You can cite in two ways using the \texttt{natbib} package:
+    \citep{articlekey}
+  and
+  \citet{articlekey}.
+
+  % now generate the bibliography from file mybib.bib
+  \bibliographystyle{plainnat}
+  \bibliography{mybib}
+
+
+  \end{document}

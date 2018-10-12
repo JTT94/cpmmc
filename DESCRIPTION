@@ -14,3 +14,4 @@ Suggests: knitr,
     testthat
 VignetteBuilder: knitr
 RoxygenNote: 6.1.0
+latex_engine: pdflatex
