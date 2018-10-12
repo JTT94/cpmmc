@@ -43,16 +43,16 @@ cpmmc <- function(data,
     # store rho for methods
     rho = rho,
 
-    # importance sampler estimator
+    # importance sampler estimator (phat(y|theta,u))
     marginal_estimator_func = marginal_estimator_func,
 
-    # theta proposal density, often a random walk proposal based on latest state
+    # theta proposal density, often a random walk proposal based on latest state (q density)
     theta_proposal_density = theta_proposal_density,
 
-    # theta proposal sampler, often a random walk proposal based on latest state
+    # theta proposal sampler, often a random walk proposal based on latest state (q sampler)
     theta_proposal_sampler = theta_proposal_sampler,
 
-    # theta prior density
+    # theta prior density (p(theta))
     theta_prior_density = theta_prior_density
   )
 
@@ -121,7 +121,7 @@ single_mh_step.cpmmc <- function(object){
   # set proposal and latest state within object
   object$chain_length <- object$chain_length + 1
   object$accept_chain[[object$chain_length]] <- accept_param
-  object$accept_chain[[object$chain_length-1]] <- proposal_param
+  object$proposed_chain[[object$chain_length-1]] <- proposal_param
 
   # return latest params
   object
@@ -129,5 +129,64 @@ single_mh_step.cpmmc <- function(object){
 
 
 
+#' S3 Implementatio of run_mh generic method for cpmmc
+#'
+#' Runs Metropolis Hastings Algorithm to generate N new proposals and accepted states from
+#'  the latest state of markov chain for cpmmc object, using intrinsic cpmmc proposals
+#'
+#' @param cpmmc object
+#' @param N number of samples from posterior
+#' @return object, with chains of parameters updated
+#' @export
+run_mh.cpmmc <- function(object, N) {
+  # iterate through MH steps
+  for (i in 1:N) {
+    object <- single_mh_step(object)
+  }
+
+  # return latest params
+  object
+}
+
+
+
+
+#' S3 Implementatio of get_chain generic method for cpmmc
+#'
+#' Accesses the proposed and/or accepted chains for cpmmc object
+#'
+#' @param cpmmc object
+#' @param chain type of chain wanted from "proposed", "accepted", "theta", "u", "proposed theta", "proposed u", "accepted theta", "accepted u"
+#' @return chain="proposed" returns a list the proposed chain of theta and u
+#' @return chain="accepted" returns a list the accepted chain of theta and u
+#' @return chain="proposed theta" a list returns the proposed chain of theta
+#' @return chain="proposed u" returns a list the proposed chain of u
+#' @return chain="accepted theta" returns a list the accepted chain of theta
+#' @return chain="accepted u" returns a list the accepted chain of u
+#' @export
+get_chain.cpmmc <- function(object, chain) {
+  if (chain %in% c("proposed", "accepted", "theta", "u", "proposed theta", "proposed u", "accepted theta", "accepted u")) {
+    if (chain == "proposed") {
+      return(object$proposed_chain)
+    }
+    if (chain == "accepted") {
+      return(object$accept_chain)
+    }
+    if (chain == "proposed theta") {
+      return(as.list(sapply(object$proposed_chain, function(x) x$theta[[1]])))
+    }
+    if (chain == "proposed u") {
+      return(as.list(sapply(object$proposed_chain, function(x) x$u[[1]])))
+    }
+    if (chain == "accepted theta") {
+      return(as.list(sapply(object$accept_chain, function(x) x$theta[[1]])))
+    }
+    if (chain == "accepted u") {
+      return(as.list(sapply(object$accept_chain, function(x) x$u[[1]])))
+    }
+  } else {
+    stop("The chain wanted is not available.")
+  }
+}
 
 
