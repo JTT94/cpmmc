@@ -21,11 +21,13 @@
 
   \section{Introduction}
 
-  The Metropolis-Hastings (MH) [] algorithm is a particular Markov Chain Monte Carlo (MCMC) procedure used to take asymptotic samples from a target distribution, $\pi$ in order to compute expectations with respect to the target distribution. This and similar MCMC procedures are often employed when it is difficult to sample $ \pi$ directly. The outline of MH is that one builds a markov chain with states $ \theta_t; t \in \mathbb{N}$, and stationary distribution $\pi$, coinciding with the desired target distribution. At each time, $ t $ , the state is updated stochastically via an accept/ reject probability on a proposal state, $\theta^\prime$, generated from some transitional kernel, $K$ with density $q$. The acceptance probability is a function of densities  $\pi$ and $q$ evaluated at $\theta_t$ and $\theta^\prime$.Provided certain ergodic conditions hold [], the average of accepted states in the generated Markov Chain will approach the desired expectation with respect to $\pi$. \\
+  The Metropolis-Hastings (MH) [] algorithm is a particular Markov Chain Monte Carlo (MCMC) procedure used to take asymptotic samples from a target distribution, $\pi$ in order to compute expectations with respect to the target distribution. This and similar MCMC procedures are often employed when it is difficult to sample $ \pi$ directly. The outline of MH is that one builds a markov chain with states $ \theta_t; t \in \mathbb{N}$, and stationary distribution $\pi$, coinciding with the desired target distribution. At each time, $ t $ , the state is updated stochastically via an accept/ reject probability on a proposal state, $\theta^\prime$, generated from some transitional kernel, $K$ with density $q$. The acceptance probability is a function of densities  $\pi$ and $q$ evaluated at $\theta_t$ and $\theta^\prime$. Provided certain ergodic conditions hold [], the average of accepted states in the generated Markov Chain will approach the desired expectation with respect to $\pi$. \\
 
 In a Bayesian context, MH is often used to sample from a posterior distribution of some parameter of interest. Given observations $y_{1:t}$, and parameter of interest, $\theta$, with prior distribution $p$ $\theta \sim p$, the target distribution will be of form $\pi (\theta) = p (\theta ¦ y_{1:t} \propto p(y|\theta) p(\theta)$.\\
 
-In order to implement MH for Bayesian inference, one would need to be able to evaluate $p(y|\theta) p(\theta)$ in order to perform the accept/ reject step in building the Markov chain. Pseudo Marginal (PM) algorithms
+In order to implement MH for Bayesian inference, one would need to be able to evaluate $p(y|\theta) p(\theta)$ in order to perform the accept/ reject step in building the Markov chain. For may latent variable models, the likelihood , $p(y ¦ \theta)$, is often intractable and there may be strong correlation between the parameter and the latent varibles under the joint posterior density. The MH algorithm is impossible to implement under these circumstances and Markov Chain Monte Carlo (MCMC) schemes targeting the joint posterior density can be inefficient. \\
+
+  On the other hand, the pseudo-marginal (PM) algorithm introduces a non-negative unbiased estimator for the intractable likelihood to replace the true likelihood ratio required for the acceptance probability in the MH algorithm. Furthermore, the correlated pseudo-marginal (CPM) algorithm, with details given in later sections, correlates the estimators for the likelihood to reduce the variance of the resulting likelihood ratio in order to improve efficency in implementing the scheme.
 
 
   \section{Methodology}
@@ -36,9 +38,6 @@ In order to implement MH for Bayesian inference, one would need to be able to ev
 
   The Metropolis-Hastings (MH) algorithm can be used to compute expectation with respect to $\pi(\theta)$, the implementation of this algorithm involves evaluating the likelihood ratio $\frac{p(y| \theta')}{p(y| \theta)}$ when the acceptance probability is calculated for a proposed candidate $\theta'$. \\
 
-  For may latent variable models, the likelihood is often intractable and there may be strong correlation between the parameter and the latent varibles under the joint posterior density. The MH algorithm is impossible to implement under these circumstances and Markov Chain Monte Carlo (MCMC) schemes targeting the joint posterior density can be inefficient. \\
-
-  On the other hand, the pseudo-marginal (PM) algorithm introduces a non-negative unbiased estimator for the intractable likelihood to replace the true likelihood ratio required for the acceptance probability in the MH algorithm. Furthermore, the correlated pseudo-marginal (CPM) algorithm, with details given in later sections, correlates the estimators for the likelihood to reduce the variance of the resulting likelihood ratio in order to improve efficency in implementing the scheme.
 
 
 
