@@ -43,6 +43,7 @@ cpmmc <- function(data,
     # store rho for methods
     rho = rho,
 
+<<<<<<< HEAD
     # importance sampler estimator (phat(y|theta,u))
     marginal_estimator_func = marginal_estimator_func,
 
@@ -53,6 +54,18 @@ cpmmc <- function(data,
     theta_proposal_sampler = theta_proposal_sampler,
 
     # theta prior density (p(theta))
+=======
+    # importance sampler estimator
+    marginal_estimator_func = marginal_estimator_func,
+
+    # theta proposal density, often a random walk proposal based on latest state
+    theta_proposal_density = theta_proposal_density,
+
+    # theta proposal sampler, often a random walk proposal based on latest state
+    theta_proposal_sampler = theta_proposal_sampler,
+
+    # theta prior density
+>>>>>>> origin/master
     theta_prior_density = theta_prior_density
   )
 
@@ -121,7 +134,11 @@ single_mh_step.cpmmc <- function(object){
   # set proposal and latest state within object
   object$chain_length <- object$chain_length + 1
   object$accept_chain[[object$chain_length]] <- accept_param
+<<<<<<< HEAD
   object$proposed_chain[[object$chain_length-1]] <- proposal_param
+=======
+  object$accept_chain[[object$chain_length-1]] <- proposal_param
+>>>>>>> origin/master
 
   # return latest params
   object
@@ -129,6 +146,7 @@ single_mh_step.cpmmc <- function(object){
 
 
 
+<<<<<<< HEAD
 #' S3 Implementatio of run_mh generic method for cpmmc
 #'
 #' Runs Metropolis Hastings Algorithm to generate N new proposals and accepted states from
@@ -188,5 +206,7 @@ get_chain.cpmmc <- function(object, chain) {
     stop("The chain wanted is not available.")
   }
 }
+=======
+>>>>>>> origin/master
 
 
