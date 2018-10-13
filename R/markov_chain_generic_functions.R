@@ -17,7 +17,6 @@ single_mh_step <- function(object){
   UseMethod('single_mh_step')
 }
 
-<<<<<<< HEAD
 
 #' Generic function to run Metropolis Hastings algorithm
 #'
@@ -39,6 +38,3 @@ get_chain <- function(object, chain){
 
 
 
-
-=======
->>>>>>> origin/master
