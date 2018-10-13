@@ -16,15 +16,16 @@
   \maketitle
 
   \begin{abstract}
-  We present the R package `testpkg', which does some useful things.
+  This document
   \end{abstract}
 
   \section{Introduction}
 
-  Here is a nice description of the background.
+  The Metropolis-Hastings (MH) [] algorithm is a particular Markov Chain Monte Carlo (MCMC) procedure used to take asymptotic samples from a target distribution, $\pi$ in order to compute expectations with respect to the target distribution. This and similar MCMC procedures are often employed when it is difficult to sample $ \pi$ directly. The outline of MH is that one builds a markov chain with states $ \theta_t; t \in \mathbb{N}$, and stationary distribution $\pi$, coinciding with the desired target distribution. At each time, $ t $ , the state is updated stochastically via an accept/ reject probability on a proposal state, $\theta^\prime$, generated from some transitional kernel, $K$ with density $q$. The acceptance probability is a function of densities  $\pi$ and $q$ evaluated at $\theta_t$ and $\theta^\prime$.Provided certain ergodic conditions hold [], the average of accepted states in the generated Markov Chain will approach the desired expectation with respect to $\pi$. \\
 
+In a Bayesian context, MH is often used to sample from a posterior distribution of some parameter of interest. Given observations $y_{1:t}$, and parameter of interest, $\theta$, with prior distribution $p$ $\theta \sim p$, the target distribution will be of form $\pi (\theta) = p (\theta ¦ y_{1:t} \propto p(y|\theta) p(\theta)$.\\
 
-
+In order to implement MH for Bayesian inference, one would need to be able to evaluate $p(y|\theta) p(\theta)$ in order to perform the accept/ reject step in building the Markov chain. Pseudo Marginal (PM) algorithms
 
 
   \section{Methodology}
