@@ -2,6 +2,7 @@
 
 \usepackage{amsmath, amsthm, amssymb}
 \usepackage[round]{natbib}
+\usepackage{hyperref}
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
 
@@ -36,11 +37,11 @@ The Metropolis-Hastings (MH) [] algorithm is a particular Markov Chain Monte Car
 
 In a Bayesian context, MH is often used to sample from a posterior distribution of some parameter of interest. Given observations $y_{1:t}$, and parameter of interest, $\theta$, with prior distribution $p$ $\theta \sim p$, the target distribution will be of form $\pi (\theta) = p(\theta ¦ y_{1:t} \propto p(y|\theta) p(\theta)$.\\
 
-In order to implement MH for Bayesian inference, one would need to be able to evaluate $p(y|\theta) p(\theta)$ in order to perform the accept/ reject step in building the Markov chain. For many applications such as with latent variable models, the likelihood , $ p(y ¦ \theta)$, is often intractable thus making MH difficult to implement. \\
+In order to implement MH for Bayesian inference, one would need to be able to evaluate $p(y|\theta) p(\theta)$ in order to perform the accept/ reject step in building the Markov chain. For many applications such as with latent variable models, the likelihood, $ p(y ¦ \theta)$, is often intractable thus making MH difficult to implement. \\
 
-The pseudo-marginal (PM) algorithm follows the same procedure as the idealised MH, however introduces an estimator for the intractable likelihood, subject to certain conditions, to replace the true likelihood ratio required for the acceptance probability in the MH algorithm. This reduces the requirement of being able to compute likelihood $p(y|\theta)$, to only being required to be able to compute a non-negative, unbiased, unnormalised Monte Carlo estimate of this likelihood. \\
+The pseudo-marginal (PM) algorithm follows the same procedure as the idealised MH, however introduces an estimator for the intractable likelihood to replace the true likelihood ratio required for the acceptance probability. This reduces the requirement of being able to compute likelihood $p(y|\theta)$, to only being required to be able to compute a non-negative, unbiased, unnormalised Monte Carlo estimate of this likelihood. \\
 
-The correlated pseudo-marginal (CPM) algorithm is a development of the PM algorithm and shall be the focus of this document. The CPM correlates the estimators for the likelihood to reduce the variance of the resulting likelihood ratio in order to improve efficency in implementing the scheme. In [], correlated auxiliary variables are introduced in the calculation of the likelihood estimate to encourage correlation in the estimates. The main contributions of [], in addition to introducing this concept, are: providing theoretical results on the benefits, guidance on tuning parameters and applications in state space and random effect models, using correlated particle filter and importance sampling estimates respectively. This document shall however focus on the random effect model and a simulation study to demonstrate some properties empirically.
+The correlated pseudo-marginal (CPM) algorithm is a development of the PM algorithm and shall be the focus of this document. The CPM correlates the estimators for the likelihood to reduce the variance of the resulting likelihood ratio in order to improve efficency in implementing the scheme. In [], correlated auxiliary variables are introduced in the calculation of the likelihood estimate to encourage correlation in the estimates. The main contributions of [], in addition to introducing this correlation approach, are: providing theoretical results on the benefits, guidance on tuning parameters and applications in state space and random effect models, using correlated particle filter and importance sampling estimates respectively. This document shall however focus on the random effect model and a simulation study to demonstrate some properties empirically.
 
   \section{Methodology}
 Let $p(y|\theta)$ denote the likelihood for the $T$ observations $y_{1:T}$, and let $p(\theta)$ be the prior density for the parameter $\theta \in \Theta \subseteq \mathbb{R}^{d}$. The Bayesian posterior density of interest can be written as $\pi (\theta) \propto p(y|\theta) p(\theta)$. To further abuse notation, denote $x \sim p$ to be that value x is a realised random variable sampled from distribution with density $p$.\\
@@ -74,7 +75,7 @@ $\theta^\prime \sim q(\theta_{t-1}, \cdot)$
 
 
 \subsection{Correlated Pseudo-Marginal Algorithm}
-To target $\pi$, CPM first augments the state from $\theta$ to $(\theta, U)$, with joint density $\bar{\pi}$. By simulating a Markov chain to target $\bar{\pi}$, one can record the $\theta$ values in order to target $\pi$. Given that $\hat{p} (y_{1:T} | \theta, U)$ is unbiased, we have that $\pi(\theta)$ is a marginal density of $\bar{\pi} (\theta, u)$, as $\int \bar{\pi}(\theta,u)du = \pi(\theta)$. \\
+To target $\pi$, the CPM first augments the state from $\theta$ to $(\theta, U)$, with joint density $\bar{\pi}$. By simulating a Markov chain to target $\bar{\pi}$, one can record only the $\theta$ values in order to target $\pi$. Given that $\hat{p} (y_{1:T} | \theta, U)$ is unbiased, we have that $\pi(\theta)$ is a marginal density of $\bar{\pi} (\theta, u)$, as $\int \bar{\pi}(\theta,u)du = \pi(\theta)$. \\
 
 \centerline{$\bar{\pi}(\theta, u) = \pi(\theta)m(u)\frac{\hat{p}(y_{1:T}| \theta, u)}{p(y_{1:T}| \theta)}$}.
 
@@ -88,7 +89,7 @@ Assumptions:
 
 
 
-The Correlated Pseudo Marginal algorithm, detailed below, uses the above assumptions and the Metropolis Hastings algorithm to target $\bar{\pi}$ with a choice of $K$ to induce correlated $U$ proposals. This framework allows for running MH without having to compute $p(y_{1:T}| \theta)$. The primary difference to the idealised MH algorithm is swapping the likelihood ratio, $\frac{ p(y_{1:T}| \theta, U^\prime)}{ p(y_{1:T}| \theta, U)}$, with its estimator $\frac{ \hat{p}(y_{1:T}| \theta, U^\prime)}{ \hat{p}(y_{1:T}| \theta, U)}$ in the acceptance probability at each iteration. \\
+The Correlated Pseudo Marginal algorithm, detailed below, uses the above assumptions and the Metropolis Hastings algorithm to target $\bar{\pi}$ with a choice of transition kernel $K$ to induce correlated $U$ proposals. This framework allows for running MH without having to compute $p(y_{1:T}| \theta)$. The primary difference to the idealised MH algorithm is swapping the likelihood ratio, $\frac{ p(y_{1:T}| \theta, U^\prime)}{ p(y_{1:T}| \theta, U)}$, with its estimator $\frac{ \hat{p}(y_{1:T}| \theta, U^\prime)}{ \hat{p}(y_{1:T}| \theta, U)}$ in the acceptance probability at each iteration. \\
 
 Informally, the intuition behind the CPM, and in particular the correlation aspect, is as follows. Providing $\hat{p}(y_{1:T}| \cdot, \cdot)$ as a function of $(\theta, U)$ is sufficiently "nice" and $\theta$ is close to $\theta^\prime$, correlation amongst $U$ and $U^\prime$ will induce correlation amongst $\hat{p}(y_{1:T}| \theta, U)$ and $\hat{p}(y_{1:T}| \theta^\prime, U^\prime)$. This correlation lowers the variance of the ratio seen in the acceptance probability, $\frac{ \hat{p}(y_{1:T}| \theta, U^\prime)}{ \hat{p}(y_{1:T}| \theta, U)}$. Hence, the algorithm will be "more similar" to the idealised MH algorithm, and reduce the inefficiency introduced by taking using likelihood estimates rather than computing exact values of the likelihood.
 
@@ -119,32 +120,45 @@ $ \epsilon \sim \mathcal{N}(0_M, I_M)$ \newline
 \end{algorithm}
 
 
+\subsection{Random Effect Model}
+
+Define the model as follows:
+
+
+\centerline{$x \sim f_\theta(\cdot)$} \newline
+\centerline{$Y_t| X_t) \sim g_\theta(\cdot | X_t)$} \\
+where $t \in \mathbb{N}$ and $\{X_t; t>0\}$ are $\mathbb{R}^k-valued$ latent variables and $\{Y_t; t>0\}$ are $\mathcal{Y}-valued$ observations.\\
+
+For observed data $Y_{1:T}=y_{1:T}$, the likelihood satisfies: \\
+\centerline{$p(y_{1:T})= \prod_{t=1}^{T} p(y_t|\theta)$}\newline
+\centerline{$p(y_t| \theta)= \int g_\theta(y_t|x_t,\theta)f_\theta(x_t) dx_t$}\\
+
+If the integral for $p(y_t| \theta)$ is intractable, one can use importance sampling with $N$ correlated particles to form an unbiased estimator $\hat{p}(y_t| \theta)$ in the CPM algorithm. \\
+
+Let: \\
+\centerline{$\hat{p}(y_{1:T}| \theta, U) = \prod_{t=1}^{T} \hat{p}(y_t|\theta, U_t)$}
+\centerline{$\hat{p}(y_t| \theta, U_t)= \frac{1}{N} \sum_{i=i}^N w(y_t, U_{t,i}; \theta$}\\
+\centerline{$w(y_t, U_{t,i} = \frac{g_\theta(y_t|X_{t,i})f_\theta(X_{t,i})}{q_\theta(X_{t,i}|y_t)}$} \\
+
+assuming a deterministic map $ \Xi: \mathbb{R}^p \times \Theta \rightarrow \mathbb{R}^k$ where \\
+$X_{t,i} = \Xi(U_{t,i}, \theta) \sim q_\theta(\cdot|y_t)$ and $U_{t,i} \sim \mathcal{N}(0_p, I_p) $
+
+\subsection{Key Results on Parameter Tuning}
+
+Theorems 1 and 2 from the paper here for random effect model
 
 
 
-
-
-
-
-
-
-
-
-
-
-    \subsection{Random Effect Model}
-
-
-
-    \subsection{Discussion}
-    -- Theory weak points
-    -- Implementation weak points. inefficiencies
+\subsection{Discussion}
+    -- Higher dimension, size of M =pTN \\
+    -- Difficulties when estimator is not "nice" i.e. continuous \\
+    -- Implementation weak points, inefficienciesm, have to loop through each data point and sample N for each point
 
 
 
   \section{Application}
 
-    \subsection{Simulation Study}
+  \subsection{Simulation Study}
 
   \section{Conclusion}
 
