@@ -11,6 +11,7 @@
 \makeatother
 \newcommand{\INDSTATE}[1][1]{\State\hspace{#1\algorithmicindent}}
 
+\newtheorem{theorem}{Theorem}
 
 % The line below tells R to use knitr on this.
 %\VignetteEngine{knitr::knitr}
@@ -25,15 +26,15 @@
 \maketitle
 
 \begin{abstract}
-This document briefly summarises the statistical methodology underlying the \texttt{cpmmc} package, located at \url{https://github.com/JTT94/cpmmc}. In particular, this paper looks at the Correlated Pseudo Marginal Markov Chain theory introduced by [] and implementation to the random effect model.
+This document briefly summarises the statistical methodology underlying the \texttt{cpmmc} package, located at \url{https://github.com/JTT94/cpmmc}. In particular, this paper looks at the Correlated Pseudo Marginal Markov Chain theory introduced by \cite{cpmmDeligiannidis2015} and application to the random effect model.
 \end{abstract}
 
-\section{Introduction}
+\section{Background}
 
-The Metropolis-Hastings (MH) [] algorithm is a particular Markov Chain Monte Carlo (MCMC) procedure used to sample asymptotically from a target distribution, $\pi$ in order to compute expectations with respect to the target distribution. This and similar MCMC procedures are often employed when it is difficult to sample $ \pi$ directly. The outline of MH is that one builds a markov chain with states $ \theta_t; t \in \mathbb{N}$, and stationary distribution $\pi$, coinciding with the desired target distribution. At each time, $ t $ , the state is updated stochastically via an accept/ reject probability on a proposal state, $\theta^\prime$, generated from some transitional kernel, $K$ with density $q$. The acceptance probability is defined as  $ \alpha_E(\theta_{t-1}, \theta^\prime) = min\left\{1,  \frac{
+The Metropolis-Hastings (MH) algorithm, detailed fully by \cite{roberts2004}, is a particular Markov Chain Monte Carlo (MCMC) procedure used to sample asymptotically from a target distribution, $\pi$ in order to compute expectations with respect to the target distribution. This and similar MCMC procedures are often employed when it is difficult to sample $ \pi$ directly. The outline of MH is that one builds a markov chain with states $ \theta_t; t \in \mathbb{N}$, and stationary distribution $\pi$, coinciding with the desired target distribution. At each time, $ t $ , the state is updated stochastically via an accept/ reject probability on a proposal state, $\theta^\prime$, generated from some transitional kernel, $K$ with density $q$. The acceptance probability is defined as  $ \alpha_E(\theta_{t-1}, \theta^\prime) = min\left\{1,  \frac{
                 \pi(\theta^\prime) q(\theta^\prime, \theta_{t-1})}
                 {\pi(\theta_{t-1}) q(\theta_{t-1}, \theta^\prime)}
-\right\} $. Provided certain ergodic conditions hold [], the average of accepted states in the generated Markov Chain will approach the desired expectation with respect to $\pi$. \\
+\right\} $. Provided certain ergodic conditions given by \cite{roberts2004} hold, the arithmetic average of accepted states in the generated Markov Chain will approach the desired expectation with respect to $\pi$. \\
 
 In a Bayesian context, MH is often used to sample from a posterior distribution of some parameter of interest. Given observations $y_{1:t}$, and parameter of interest, $\theta$, with prior distribution $p$ $\theta \sim p$, the target distribution will be of form $\pi (\theta) = p(\theta ¦ y_{1:t} \propto p(y|\theta) p(\theta)$.\\
 
@@ -41,9 +42,11 @@ In order to implement MH for Bayesian inference, one would need to be able to ev
 
 The pseudo-marginal (PM) algorithm follows the same procedure as the idealised MH, however introduces an estimator for the intractable likelihood to replace the true likelihood ratio required for the acceptance probability. This reduces the requirement of being able to compute likelihood $p(y|\theta)$, to only being required to be able to compute a non-negative, unbiased, unnormalised Monte Carlo estimate of this likelihood. \\
 
-The correlated pseudo-marginal (CPM) algorithm is a development of the PM algorithm and shall be the focus of this document. The CPM correlates the estimators for the likelihood to reduce the variance of the resulting likelihood ratio in order to improve efficency in implementing the scheme. In [], correlated auxiliary variables are introduced in the calculation of the likelihood estimate to encourage correlation in the estimates. The main contributions of [], in addition to introducing this correlation approach, are: providing theoretical results on the benefits, guidance on tuning parameters and applications in state space and random effect models, using correlated particle filter and importance sampling estimates respectively. This document shall however focus on the random effect model and a simulation study to demonstrate some properties empirically.
+The correlated pseudo-marginal (CPM) algorithm is a development of the PM algorithm and shall be the focus of this document. The CPM correlates the estimators for the likelihood to reduce the variance of the resulting likelihood ratio in order to improve efficency in implementing the scheme. In \cite{cpmmDeligiannidis2015}, correlated auxiliary variables are introduced in the calculation of the likelihood estimate to encourage correlation in the estimates.\\
 
-  \section{Methodology}
+The main contributions of \cite{cpmmDeligiannidis2015}, in addition to introducing this correlation approach, are: providing theoretical results on the benefits, guidance on tuning parameters and demonstrated applications in state space and random effect models. This document shall focus on the high-level CPM theory, random effect model and a simulation study to demonstrate some properties empirically.
+
+\section{Methodology}
 Let $p(y|\theta)$ denote the likelihood for the $T$ observations $y_{1:T}$, and let $p(\theta)$ be the prior density for the parameter $\theta \in \Theta \subseteq \mathbb{R}^{d}$. The Bayesian posterior density of interest can be written as $\pi (\theta) \propto p(y|\theta) p(\theta)$. To further abuse notation, denote $x \sim p$ to be that value x is a realised random variable sampled from distribution with density $p$.\\
 
 \subsection{Metropolis-Hastings}
@@ -95,7 +98,7 @@ Informally, the intuition behind the CPM, and in particular the correlation aspe
 
 
 
-\begin{algorithm}
+\begin{algorithm}[H]
 \caption{Correlated Pseudo Marginal Algorithm}\label{euclid}
 \begin{algorithmic}[1]
 \BState  $\text{Initialise }  :$ \newline
@@ -133,7 +136,7 @@ For observed data $Y_{1:T}=y_{1:T}$, the likelihood satisfies: \\
 \centerline{$p(y_{1:T})= \prod_{t=1}^{T} p(y_t|\theta)$}\newline
 \centerline{$p(y_t| \theta)= \int g_\theta(y_t|x_t,\theta)f_\theta(x_t) dx_t$}\\
 
-If the integral for $p(y_t| \theta)$ is intractable, one can use importance sampling with $N$ correlated particles to form an unbiased estimator $\hat{p}(y_t| \theta)$ in the CPM algorithm. \\
+If the integral for $p(y_t| \theta)$ is intractable, one can use teh CPM algorithm with importance sampling  to form an unbiased estimator $\hat{p}(y_t| \theta)$, where $N$ is the number of proposal samples. \\
 
 Let: \\
 \centerline{$\hat{p}(y_{1:T}| \theta, U) = \prod_{t=1}^{T} \hat{p}(y_t|\theta, U_t)$}
@@ -145,7 +148,21 @@ $X_{t,i} = \Xi(U_{t,i}, \theta) \sim q_\theta(\cdot|y_t)$ and $U_{t,i} \sim \mat
 
 \subsection{Key Results on Parameter Tuning}
 
-Theorems 1 and 2 from the paper here for random effect model
+Other than introducing the approach, the primary theoretic contributions of \cite{cpmmDeligiannidis2015} are in specifying the distributions of the loglikelihood error, $Z_T(\theta)$, and loglikelihood error ratio, $R_T(\theta, \theta^\prime)$ under correlated $U$ proposals and under non-correlated for comparison of CPM with the PM algorithm. The significance of these results lies in using them to inform choice of parameters $\rho$ and $N$ which controls the correlation and number of Monte Carlo samples in the unbiased estimator respectively. \\
+
+\centerline{$Z_T(\theta) = log(\hat{p}(Y_{1:T}| \theta, U)) - log(p(Y_{1:T}|\theta))$} \\
+
+
+\centerline{$R_T(\theta, \theta^\prime) = log \frac{\hat{p}(Y_{1:T}| \theta^\prime, U^\prime)}{\hat{p}(Y_{1:T}| \theta, U)} - log \frac{p(Y_{1:T}| \theta^\prime,)}{p(Y_{1:T}| \theta)}$} \\
+
+
+In the interest of brevity, the theorems of \cite{cpmmDeligiannidis2015} which state that $Z_T(\theta)$ and $R_T(\theta, \theta^\prime)$ are asympototically normal are not repeated below. However, the key practical implications are that one should find $\beta>0, \psi>0$ and set the CPM parameters such that: \\
+
+\centreline{$N_T = \beta T ^{\frac{1}{2}}$}\\
+
+\cenreline{$\rho = exp(-\psi \beta T ^ {-\frac{1}{2}}) = exp(-\psi \frac{N_T}{T})$} \\
+
+\cite{cpmmDeligiannidis2015} then provides a heuristic to find these parameters by minimizing a specific objective function, however due to the involved nature, it has been excluded from this document.
 
 
 
@@ -163,6 +180,36 @@ Theorems 1 and 2 from the paper here for random effect model
   \section{Conclusion}
 
 
+% \begin{theorem}
+% Let $N_T = \beta T^\alpha$ with $\frac{1}{3} < \alpha \leq 1$ and $Y_i \overset{i.i.d.}{\sim} \mu$ \\
+%
+% 1) If $\mathbb{E}[\bar{w}(Y, U_{1,1}, \theta)^8] < \infty$ and $U \sim m$, then:\\
+%
+% \centerline{
+% $T^{\frac{\alpha -1}{2}}Z_T{\theta} + \frac{1}{2}T^{\frac{1-\alpha}{2}}\beta^{-1}\gamma(\theta)^2 | \mathcal{Y}^T \Rightarrow \mathcal{N}(0, \beta^{-1}\gamma(\theta)^2)$} \newline
+%
+% 2) If $\mathbb{E}[\bar{w}(Y, U_{1,1}, \theta)^9] < \infty$ and $U \sim \bar{\pi}(\cdot, \theta)$, then:\\
+%
+% \centerline{
+% $T^{\frac{\alpha -1}{2}}Z_T{\theta} - \frac{1}{2}T^{\frac{1-\alpha}{2}}\beta^{-1}\gamma(\theta)^2 | \mathcal{Y}^T \Rightarrow \mathcal{N}(0, \beta^{-1}\gamma(\theta)^2)$}\\
+%
+% \end{theorem}
+%
+% \begin{theorem}
+% Let $\theta, \xi$ be fixed. Assume: \\
+% 1) $\vartheta \mapsto \bar{w}(y_1, u_{1,1}; \vartheta)$ and $\vartheta \mapsto \mathbb{E}[\bar{w}(y_1, u_{1,1}; \vartheta)^9]$ are continuous at $\vartheta = \theta$ for any $ (y_1, u_{1,1} ) \in \mathbb(Y) \times \mathbb{R}^p$ \\
+% 2) $\vartheta \mapsto \gamma(\vartheta)$ is continously differentiable at $\vartheta = \theta$ \\
+% 3) $\mathbb{E}[\bar{w}(Y_1, U_{1,1}; \vartheta)^9] + \mathbb{E}[\gamma(Y_1;\vartheta)^4] < \infty$ \\
+%
+% For $N_T = \beta T^\alpha$ with $\frac{1}{3} < \alpha \leq 1$ and $Y_i \overset{i.i.d.}{\sim} \mu$, $U \sim \bar{\pi}(\cdot, \theta)$ and $U^\prime \sim m$ where $U$ and $U^\prime$ are independent: \\
+%
+% \centerline{
+% $T^{\frac{\alpha -1}{2}}R_T(\theta, \theta + \xi / \sqrt{T}) + T^{\frac{1-\alpha}{2}}\beta^{-1}\gamma(\theta)^2 | \mathcal{Y}^T \Rightarrow \mathcal{N}(0, 2\beta^{-1}\gamma(\theta)^2)$}\\
+%
+% \end{theorem}
+%
+%
+% Theorems 1 and 2 from the paper here for random effect model
 
 %\texttt{align} environment (in the \texttt{amsmath} package) for displayed equations:
 %\begin{align*}
