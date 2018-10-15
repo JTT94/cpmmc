@@ -40,21 +40,6 @@ test1 <- lapply(1:5, matrix, data= 1:12, nrow=4, ncol=3)
 test2 <- lapply(1:5, matrix, data= 13:24, nrow=4, ncol=3)
 mapply("+", test1, test2, SIMPLIFY = FALSE)
 
-testU <- lapply(1:8192, matrix, data= rnorm(80), nrow=80, ncol=1)
-
-
-
-
-#dimension_single_observation <- ncol(as.matrix(old_u[[1]]))
-#number_ISsamples <- nrow(old_u[[1]])
-
-#epsilon <- lapply(1:length(old_u), matrix,
-#                  data=rnorm(dimension_single_observation*number_ISsamples),
-#                  nrow=number_ISsamples, ncol=dimension_single_observation)
-#rho_old_u <- lapply(old_u, "*", rho)
-#rho_epsilon <- lapply(epsilon, "*", sqrt(1-rho^2))
-
-#new_u <- mapply("+", rho_old_u, rho_epsilon, SIMPLIFY=FALSE)
 
 
 

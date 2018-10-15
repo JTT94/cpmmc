@@ -99,6 +99,7 @@ single_mh_step.cpmmc <- function(object){
 
   epsilon <- replicate(number_datapoints, matrix(rnorm(number_ISsamples * dimension_single_observation),
                                                  nrow=number_ISsamples, ncol=dimension_single_observation))
+
   rho_old_u <- lapply(old_u, "*", rho)
   rho_epsilon <- lapply(epsilon, "*", sqrt(1-rho^2))
 
