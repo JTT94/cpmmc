@@ -11,9 +11,9 @@ cpmmc <- function(data,
                   theta_0,
                   u_0,
                   rho,
-                  marginal_estimator_func,
-                  theta_prior_density,
-                  theta_proposal_density,
+                  log_marginal_estimator_func,
+                  log_theta_prior_density,
+                  log_theta_proposal_density,
                   theta_proposal_sampler){
 
 
@@ -24,13 +24,13 @@ cpmmc <- function(data,
     data = data,
 
     # number of iterations
-    N_ = length(u_0[[1]]),
+    N_ = dim(u_0)[1],
 
     # number of data points
-    T_ = length(u_0),
+    T_ = dim(u_0)[3],
 
     # number of parameters per observation
-    p_ = length(u_0[[1]][[1]]),
+    p_ = dim(u_0)[2],
 
     #set chain length for future additions
     chain_length = 1,
@@ -53,16 +53,16 @@ cpmmc <- function(data,
     rho = rho,
 
     # importance sampler estimator (phat(y|theta,u))
-    marginal_estimator_func = marginal_estimator_func,
+    log_marginal_estimator_func = log_marginal_estimator_func,
 
     # theta proposal density, often a random walk proposal based on latest state (q density)
-    theta_proposal_density = theta_proposal_density,
+    log_theta_proposal_density = log_theta_proposal_density,
 
     # theta proposal sampler, often a random walk proposal based on latest state (q sampler)
     theta_proposal_sampler = theta_proposal_sampler,
 
     # theta prior density (p(theta))
-    theta_prior_density = theta_prior_density
+    log_theta_prior_density = log_theta_prior_density
   )
 
   attr(obj,'class') <- 'cpmmc' # #TODO inherit mh class, once implemented
@@ -107,27 +107,25 @@ single_mh_step.cpmmc <- function(object){
   number_datapoints <- object$T_
 
   epsilon <- array(data =  rnorm(number_datapoints * number_ISsamples * dimension_single_observation),
-                   dim = c(number_datapoints, dimension_single_observation, number_ISsamples),
-                   dimnames = NULL)
+                   dim = c(number_ISsamples, dimension_single_observation, number_datapoints))
 
   new_u <- rho * old_u + sqrt(1-rho^2) * epsilon
-
 
   proposal_param <- list(theta=new_theta, u=new_u)
 
   # calculate accept / reject probability using log likelihoods
-  new_marginal_estimator <- object$marginal_estimator_func(object$data, new_theta, new_u)
-  old_marginal_estimator <- object$marginal_estimator_func(object$data, old_theta, old_u)
+  new_marginal_estimator <- object$log_marginal_estimator_func(object$data, new_theta, new_u)
+  old_marginal_estimator <- object$log_marginal_estimator_func(object$data, old_theta, old_u)
 
   numerator <- new_marginal_estimator +
-    object$theta_prior_density(new_theta) +
-    object$theta_proposal_density(new_theta,old_theta)
+    object$log_theta_prior_density(new_theta) +
+    object$log_theta_proposal_density(new_theta,old_theta)
 
   denominator <- old_marginal_estimator +
-    object$theta_prior_density(old_theta) +
-    object$theta_proposal_density(old_theta, new_theta)
+    object$log_theta_prior_density(old_theta) +
+    object$log_theta_proposal_density(old_theta, new_theta)
 
-  ar_prob <- numerator - denominator
+  ar_prob <- numerator- denominator
 
   accept_bool <- log(runif(1)) < ar_prob
   if (accept_bool){
@@ -190,16 +188,16 @@ get_chain.cpmmc <- function(object, chain) {
       return(object$accept_chain)
     }
     if (chain == "proposed theta") {
-      return(as.list(sapply(object$proposed_chain, function(x) x$theta[[1]])))
+      return(sapply(object$proposed_chain, function(x) x$theta[[1]]))
     }
     if (chain == "proposed u") {
-      return(as.list(sapply(object$proposed_chain, function(x) x$u[[1]])))
+      return((sapply(object$proposed_chain, function(x) x$u[[1]])))
     }
     if (chain == "accepted theta") {
-      return(as.list(sapply(object$accept_chain, function(x) x$theta[[1]])))
+      return((sapply(object$accept_chain, function(x) x$theta[[1]])))
     }
     if (chain == "accepted u") {
-      return(as.list(sapply(object$accept_chain, function(x) x$u[[1]])))
+      return((sapply(object$accept_chain, function(x) x$u[[1]])))
     }
   } else {
     stop("The chain wanted is not available.")
