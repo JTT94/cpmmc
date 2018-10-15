@@ -23,6 +23,15 @@ cpmmc <- function(data,
     # data
     data = data,
 
+    # number of iterations
+    N_ = length(u_0[[1]]),
+
+    # number of data points
+    T_ = length(u_0),
+
+    # number of parameters per observation
+    p_ = length(u_0[[1]][[1]]),
+
     #set chain length for future additions
     chain_length = 1,
 
@@ -93,17 +102,15 @@ single_mh_step.cpmmc <- function(object){
   # sample new U
   rho <- object$rho
 
-  dimension_single_observation <- ncol(as.matrix(old_u[[1]]))
-  number_ISsamples <- nrow(as.matrix(old_u[[1]]))
-  number_datapoints <- length(old_u)
+  dimension_single_observation <- object$p_
+  number_ISsamples <- object$N_
+  number_datapoints <- object$T_
 
-  epsilon <- replicate(number_datapoints, matrix(rnorm(number_ISsamples * dimension_single_observation),
-                                                 nrow=number_ISsamples, ncol=dimension_single_observation))
+  epsilon <- array(data =  rnorm(number_datapoints * number_ISsamples * dimension_single_observation),
+                   dim = c(number_datapoints, dimension_single_observation, number_ISsamples),
+                   dimnames = NULL)
 
-  rho_old_u <- lapply(old_u, "*", rho)
-  rho_epsilon <- lapply(epsilon, "*", sqrt(1-rho^2))
-
-  new_u <- mapply("+", rho_old_u, rho_epsilon, SIMPLIFY=FALSE)
+  new_u <- rho * old_u + sqrt(1-rho^2) * epsilon
 
 
   proposal_param <- list(theta=new_theta, u=new_u)
@@ -158,7 +165,6 @@ run_mh.cpmmc <- function(object, nsim) {
   # return latest params
   object
 }
-
 
 
 
