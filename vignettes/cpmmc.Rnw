@@ -162,7 +162,7 @@ In the interest of brevity, the theorems of \cite{cpmmDeligiannidis2015} which s
 
 \cenreline{$\rho = exp(-\psi \beta T ^ {-\frac{1}{2}}) = exp(-\psi \frac{N_T}{T})$} \\
 
-\cite{cpmmDeligiannidis2015} then provides a heuristic to find these parameters by minimizing a specific objective function, however due to the involved nature, it has been excluded from this document.
+\cite{cpmmDeligiannidis2015} then provides a heuristic to find these parameters by minimizing a specific objective function, however it has been excluded from this document due to the involved nature.
 
 
 
