@@ -4,7 +4,7 @@
 \alias{run_mh}
 \title{Generic function to run Metropolis Hastings algorithm}
 \usage{
-run_mh(object, N)
+run_mh(object, nsim)
 }
 \arguments{
 \item{object, }{markov chain object e.g. cpmmc}

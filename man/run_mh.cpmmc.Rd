@@ -4,12 +4,12 @@
 \alias{run_mh.cpmmc}
 \title{S3 Implementatio of run_mh generic method for cpmmc}
 \usage{
-\method{run_mh}{cpmmc}(object, N)
+\method{run_mh}{cpmmc}(object, nsim)
 }
 \arguments{
-\item{N}{number of samples from posterior}
-
 \item{cpmmc}{object}
+
+\item{N}{number of samples from posterior}
 }
 \value{
 object, with chains of parameters updated
