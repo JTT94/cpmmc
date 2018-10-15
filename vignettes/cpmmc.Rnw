@@ -50,13 +50,13 @@ The main contributions of \cite{cpmmDeligiannidis2015}, in addition to introduci
 Let $p(y_{1:T}|\theta)$ denote the likelihood for the $T$ observations $y_{1:T}$, and let $p(\theta)$ be the prior density for the parameter $\theta \in \Theta \subseteq \mathbb{R}^{d}$. The Bayesian posterior density of interest can be written as $\pi (\theta) \propto p(y_{1:T}|\theta) p(\theta)$. To further abuse notation, let $x \sim p$ denote sampling realisation x from the distribution with density $p$.\\
 
 \subsection{Metropolis-Hastings}
-In a Bayesian setting, the MH algorithm is as detailed below, and the acceptance probability can be rewritten from $\alpha_E(\theta_{t-1}, \theta^\prime) = min\left\{1,  \frac{
+In a Bayesian setting, the MH algorithm is as detailed below, the acceptance probability have been rewritten from $\alpha_E(\theta_{t-1}, \theta^\prime) = min\left\{1,  \frac{
                 \pi(\theta^\prime) q(\theta^\prime, \theta_{t-1})}
                 {\pi(\theta_{t-1}) q(\theta_{t-1}, \theta^\prime)}\right\}$ to
  $ \alpha_E(\theta_{t-1}, \theta^\prime) = min\left\{1,  \frac{
                 p(y_{1:T}| \theta^\prime) q(\theta^\prime, \theta_{t-1})p(\theta^\prime)}
                 {p(y_{1:T}| \theta_{t-1}) q(\theta_{t-1}, \theta^\prime)p(\theta_{t-1})}
-\right\} $.
+\right\} $ to emphasis the need to compute the exact likelihood.
 
 \begin{algorithm}[H]
 \caption{Idealised Metropolis Hastings}\label{euclid}
