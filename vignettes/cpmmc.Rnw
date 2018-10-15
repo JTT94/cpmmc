@@ -155,7 +155,11 @@ The significance of these results lies in using them to inform choice of paramet
 In the interest of brevity, the theorems of \cite{cpmmDeligiannidis2015} which state that $Z_T(\theta)$ and $R_T(\theta, \theta^\prime)$ are asympototically normal are not repeated below. However, the key practical implications are that one should find $\beta>0, \psi>0$ and set the CPM parameters such that:
 \begin{align*}
 N_T =& \beta T ^{\frac{1}{2}} \\
+<<<<<<< HEAD
 \rho =& \exp(-\psi \beta T ^ {-\frac{1}{2}}) = \exp(-\psi \frac{N_T}{T})
+=======
+\rho =& \exp(-\psi \beta T ^ {-\frac{1}{2}}) = \exp(-\psi \frac{N_T}{T}
+>>>>>>> f79413a5d12f3bbddd24d72d381c21bcae531067
 \end{align*}
 
 \cite{cpmmDeligiannidis2015} then provides a heuristic to find these parameters by minimizing a specific objective function, however due to the involved nature, it has been excluded from this document.
