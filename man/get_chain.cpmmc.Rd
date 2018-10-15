@@ -12,17 +12,17 @@
 \item{cpmmc}{object}
 }
 \value{
-chain="proposed" returns the proposed chain of theta and u
+chain="proposed" returns a list the proposed chain of theta and u
 
-chain="accepted" returns the accepted chain of theta and u
+chain="accepted" returns a list the accepted chain of theta and u
 
-chain="proposed theta" returns the proposed chain of theta
+chain="proposed theta" a list returns the proposed chain of theta
 
-chain="proposed u" returns the proposed chain of u
+chain="proposed u" returns a list the proposed chain of u
 
-chain="accepted theta" returns the accepted chain of theta
+chain="accepted theta" returns a list the accepted chain of theta
 
-chain="accepted u" returns the accepted chain of u
+chain="accepted u" returns a list the accepted chain of u
 }
 \description{
 Accesses the proposed and/or accepted chains for cpmmc object

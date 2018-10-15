@@ -92,26 +92,37 @@ single_mh_step.cpmmc <- function(object){
 
   # sample new U
   rho <- object$rho
-  epsilon <- rnorm(length(old_u))
-  new_u <- rho*old_u + sqrt(1-rho^2)* epsilon
+
+  dimension_single_observation <- ncol(old_u[[1]])
+  number_ISsamples <- nrow(old_u[[1]])
+  number_datapoints <- length(old_u)
+
+  epsilon <- lapply(1:number_datapoints, matrix,
+                    data=rnorm(dimension_single_observation*number_ISsamples),
+                    nrow=number_ISsamples, ncol=dimension_single_observation)
+  rho_old_u <- lapply(old_u, "*", rho)
+  rho_epsilon <- lapply(epsilon, "*", sqrt(1-rho^2))
+
+  new_u <- mapply("+", rho_old_u, rho_epsilon, SIMPLIFY=FALSE)
+
 
   proposal_param <- list(theta=new_theta, u=new_u)
 
-  # calculate accept / reject probability
+  # calculate accept / reject probability using log likelihoods
   new_marginal_estimator <- object$marginal_estimator_func(object$data, new_theta, new_u)
   old_marginal_estimator <- object$marginal_estimator_func(object$data, old_theta, old_u)
 
-  numerator <- new_marginal_estimator *
-    object$theta_prior_density(new_theta) *
+  numerator <- new_marginal_estimator +
+    object$theta_prior_density(new_theta) +
     object$theta_proposal_density(new_theta,old_theta)
 
-  denominator <- old_marginal_estimator *
-    object$theta_prior_density(old_theta) *
+  denominator <- old_marginal_estimator +
+    object$theta_prior_density(old_theta) +
     object$theta_proposal_density(old_theta, new_theta)
 
-  ar_prob <- numerator / denominator
+  ar_prob <- numerator - denominator
 
-  accept_bool <- runif(1) < ar_prob
+  accept_bool <- log(runif(1)) < ar_prob
   if (accept_bool){
     accept_param <- proposal_param
   } else {

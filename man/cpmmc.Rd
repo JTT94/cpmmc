@@ -4,8 +4,8 @@
 \alias{cpmmc}
 \title{Instantiate cpmmc object and set initial parameters}
 \usage{
-cpmmc(data, theta_0, u_0, rho, marginal_estimator_func,
-  theta_prior_density, theta_proposal_density, theta_proposal_sampler)
+cpmmc(data, theta_0, u_0, rho, marginal_estimator_func, theta_prior_density,
+  theta_proposal_density, theta_proposal_sampler)
 }
 \value{
 cpmmc object
