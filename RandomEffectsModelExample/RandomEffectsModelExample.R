@@ -24,3 +24,13 @@ rem80 <- cpmmc(data = rem_y,
 )
 
 
+
+run_mh(rem80, 100)
+
+
+
+
+
+
+
+

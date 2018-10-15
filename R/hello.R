@@ -45,7 +45,7 @@
 #' sum("a")
 #' }
 #' @export
-sum <- function(..., na.rm = TRUE) {}
+##sum <- function(..., na.rm = TRUE) {}
 
 hello <- function() {
   print("Hello, world!")
