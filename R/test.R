@@ -1,52 +1,40 @@
-cpmmc_obj <- cpmmc(data = c(1,2,3),
-                   theta_0 = 0,
-                   u_0 = 1,
-                   rho = 0.9,
-                   marginal_estimator_func = function(data, new_theta, new_u) rnorm(1),
-                   theta_prior_density = function(x) dnorm(x),
-                   theta_proposal_density = function(old_theta, new_theta) dnorm(new_theta-old_theta),
-                   theta_proposal_sampler = function(theta) rnorm(1)
-)
 
-object <- cpmmc_obj
-
-
-
-for(i in 1:5000){
-  cpmmc_obj <- single_mh_step(cpmmc_obj)
-  print(length(cpmmc_obj$accept_chain))
-}
-
-sapply(cpmmc_obj$accept_chain, function(x) x$u[[1]])
-
-
-func <- function(x) x
-func <- function(x){
-  x
-}
-
-T <- 8192
-N <- 80
-p <- 1
-testU <- lapply(1:T, matrix, data= rnorm(N*p), nrow=N, ncol=p)
-
-
-testU <- lapply(1:5, matrix, data= rnorm(12), nrow=4, ncol=3)
-length(testU) # T
-ncol(testU[[1]]) # p
-nrow(testU[[1]]) # N
-
-test1 <- lapply(1:5, matrix, data= 1:12, nrow=4, ncol=3)
-test2 <- lapply(1:5, matrix, data= 13:24, nrow=4, ncol=3)
-mapply("+", test1, test2, SIMPLIFY = FALSE)
-
-
-
-
-
-
-
-
-
-
+# importance_estimator <- function(y_t, theta, new_u){
+#
+#   # vectorised function for each data point
+#   func <- function(y_t, ind){
+#     u_t <- (as.matrix(new_u[,,ind]))
+#     sum(dnorm(y_t, mean = u_t + theta)) / length(u_t)
+#   }
+#
+#   sum(log(mapply( func,  y_t, seq_len(dim(new_u)[3]))))
+# }
+#
+# data <- rnorm(1000, 0.5)
+# cpmmc_obj <- cpmmc(data = data,
+#                    theta_0 = 0,
+#                    u_0 = array(rnorm(80*1*1000), dim = c(80,1,1000)),
+#                    rho = 0.9,
+#                    log_marginal_estimator_func = importance_estimator,
+#                    log_theta_prior_density = function(x) {dnorm(x, log = T)},
+#                    log_theta_proposal_density = function(old_theta, new_theta) {dnorm(new_theta-old_theta, log = T)},
+#                    theta_proposal_sampler = function(theta) {rnorm(1, mean = theta)}
+# )
+#
+# before_time <- Sys.time()
+# cpmmc_obj <- run_mh(cpmmc_obj, nsim = 10^4)
+# after_time <- Sys.time()
+# print((after_time - before_time))
+#
+#
+# theta_chain <- sapply(cpmmc_obj$accept_chain, function(x) x$theta)
+# prop_theta_chain <- sapply(cpmmc_obj$proposed_chain, function(x) x$theta)
+# mean(theta_chain)
+# length(theta_chain)
+# dt <- data.table::data.table(prop_chain = prop_theta_chain, accept_chain = theta_chain)
+# dt <- dt[1:10000]
+# dt
+# data.table::fwrite(dt, file ="./output/output_chains.csv" )
+# plot(theta_chain, type='l')
+# points(prop_theta_chain, type='l', col='blue')
 
