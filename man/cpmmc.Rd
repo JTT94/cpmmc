@@ -4,12 +4,41 @@
 \alias{cpmmc}
 \title{Instantiate cpmmc object and set initial parameters}
 \usage{
-cpmmc(data, theta_0, u_0, rho, marginal_estimator_func, theta_prior_density,
-  theta_proposal_density, theta_proposal_sampler)
+cpmmc(data, theta_0, u_0, rho, log_marginal_estimator_func,
+  log_theta_prior_density, log_theta_proposal_density,
+  theta_proposal_sampler)
+}
+\arguments{
+\item{data}{observed data points}
+
+\item{theta_0}{initialisation of the vector of parameters of interest}
+
+\item{u_0}{initialisation of the auxiliary random variables}
+
+\item{rho}{correlation parameter}
+
+\item{log_marginal_estimator_func}{log likelihood estimator function}
+
+\item{log_theta_prior_density}{log density function for the prior distribution of theta}
+
+\item{log_theta_proposal_density}{log density function for theta proposals}
+
+\item{theta_proposal_sampler}{sampling distribution for theta proposals}
 }
 \value{
 cpmmc object
 }
 \description{
 This is an S3 object constructor helper function for class cpmmc
+}
+\examples{
+cpmmc_obj <- cpmmc(data = rnorm(10, 1, 1),
+theta_0 = 0,
+u_0 = array(rnorm(5*10), dim = c(5,1,10)),
+rho = 0.9,
+log_marginal_estimator_func = function(x) {dnorm(x, 1, log=T)},
+log_theta_prior_density = function(x) {dnorm(x, log = T)},
+log_theta_proposal_density = function(old_theta, new_theta) {dnorm(new_theta-old_theta, log = T)},
+theta_proposal_sampler = function(theta) {rnorm(1, mean = theta)}
+)
 }
