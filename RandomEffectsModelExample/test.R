@@ -65,7 +65,6 @@ log_proposal_density <- function(state, proposal){
 
 mh <- metropolis_hastings(initial_params, log_target_density_theta, log_proposal_density, proposal_sampler)
 
-single_transition(mh)
 mh <- run_chain(mh, 1000)
 
 mean(data)
