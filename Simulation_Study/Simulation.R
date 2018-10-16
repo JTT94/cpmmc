@@ -59,4 +59,6 @@ for(i in seq_len(nsim)){
     sum(dnorm(rem$data, mean = rem$chain[[i]], sd = sqrt(2), log = T))
 }
 
+hist(w-z, probability = T)
+
 
