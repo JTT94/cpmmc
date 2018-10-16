@@ -11,9 +11,9 @@ cpmmc <- function(data,
                   theta_0,
                   u_0,
                   rho,
-                  marginal_estimator_func,
-                  theta_prior_density,
-                  theta_proposal_density,
+                  log_marginal_estimator_func,
+                  log_theta_prior_density,
+                  log_theta_proposal_density,
                   theta_proposal_sampler){
 
 
@@ -44,16 +44,16 @@ cpmmc <- function(data,
     rho = rho,
 
     # importance sampler estimator (phat(y|theta,u))
-    marginal_estimator_func = marginal_estimator_func,
+    log_marginal_estimator_func = log_marginal_estimator_func,
 
     # theta proposal density, often a random walk proposal based on latest state (q density)
-    theta_proposal_density = theta_proposal_density,
+    log_theta_proposal_density = log_theta_proposal_density,
 
     # theta proposal sampler, often a random walk proposal based on latest state (q sampler)
     theta_proposal_sampler = theta_proposal_sampler,
 
     # theta prior density (p(theta))
-    theta_prior_density = theta_prior_density
+    log_theta_prior_density = log_theta_prior_density
   )
 
   attr(obj,'class') <- 'cpmmc' # #TODO inherit mh class, once implemented
@@ -109,16 +109,16 @@ single_mh_step.cpmmc <- function(object){
   proposal_param <- list(theta=new_theta, u=new_u)
 
   # calculate accept / reject probability using log likelihoods
-  new_marginal_estimator <- object$marginal_estimator_func(object$data, new_theta, new_u)
-  old_marginal_estimator <- object$marginal_estimator_func(object$data, old_theta, old_u)
+  new_marginal_estimator <- object$log_marginal_estimator_func(object$data, new_theta, new_u)
+  old_marginal_estimator <- object$log_marginal_estimator_func(object$data, old_theta, old_u)
 
   numerator <- new_marginal_estimator +
-    object$theta_prior_density(new_theta) +
-    object$theta_proposal_density(new_theta,old_theta)
+    object$log_theta_prior_density(new_theta) +
+    object$log_theta_proposal_density(new_theta,old_theta)
 
   denominator <- old_marginal_estimator +
-    object$theta_prior_density(old_theta) +
-    object$theta_proposal_density(old_theta, new_theta)
+    object$log_theta_prior_density(old_theta) +
+    object$log_theta_proposal_density(old_theta, new_theta)
 
   ar_prob <- numerator - denominator
 
