@@ -24,16 +24,24 @@ normal_log_IS_estimate <- function(data, theta, new_u){
 #'
 #' @return random_effects_model object
 #' @export
-normal_random_effect_model <- function(data, theta_0, u_0, rho, log_theta_prior_density, log_theta_proposal_density, theta_proposal_sampler){
+normal_random_effect_model <- function(data,
+                                       theta_0,
+                                       u_0,
+                                       rho,
+                                       log_theta_prior_density = function(x) dnorm(x, log = T),
+                                       log_theta_proposal_density = function(old_theta, new_theta) dnorm(new_theta-old_theta, log = T),
+                                       theta_proposal_sampler = function(theta) rnorm(1, mean = theta)){
 
   # instantiate cpmmc object with normal densities, proposals and IS estimator
   obj <- cpmmc(data = data,
                theta_0 = theta_0,
                u_0 = u_0,
                rho = rho,
-               log_theta_prior_density = function(x) dnorm(x, log = T),
-               log_theta_proposal_density = function(old_theta, new_theta) dnorm(new_theta-old_theta, log = T),
-               theta_proposal_sampler = function(theta) rnorm(1, mean = theta)
+               log_marginal_estimator_func = normal_log_IS_estimate,
+               log_theta_prior_density = log_theta_prior_density,
+               log_theta_proposal_density = log_theta_proposal_density,
+               theta_proposal_sampler = theta_proposal_sampler
+
   )
 
   # set class, inherit cpmmc
