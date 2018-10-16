@@ -105,9 +105,6 @@ get_chain_length.markov_chain <- function(object){
 
 run_chain.markov_chain <- function(object, chain_length){
   for (i in seq_len(chain_length)){
-    if (i %% 500 == 0){
-      print(i)
-    }
     print(i)
     object <- single_transition(object)
   }
