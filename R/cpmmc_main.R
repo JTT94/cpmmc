@@ -89,7 +89,7 @@ cpmmc <- function(data,
   obj
 }
 
-#' S3 Implementatio of single_mh_step generic method for cpmmc
+#' S3 Implementation of single_mh_step generic method for cpmmc
 #'
 #' Runs Metropolis Hastings Algorithm to generate a new proposal and accepted state from
 #'  the latest state of markov chain for cpmmc object, using intrinsic cpmmc proposals

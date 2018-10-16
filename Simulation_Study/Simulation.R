@@ -4,6 +4,19 @@
 # Wrapper Functions
 # ------------------------------------
 
+# Calculate acceptance probability
+acceptance_prob <- function(object) {
+  theta_chain <- sapply(object$object$chain, function(x) x[[1]])
+  ac_num <- 0
+  sim_num <- length(theta_chain) - 1
+  for (i in (seq_len(theta_chain)-1)) {
+    if (theta_chain[i] != theta_chain[i+1]) {
+      ac_num <- ac_num + 1
+    }
+  }
+  return(ac_num/sim_num)
+}
+
 # For MH
 # --------------------------------
 log_target_density <- function(data, theta){
