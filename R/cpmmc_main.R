@@ -147,9 +147,10 @@ single_transition.cpmmc <- function(object){
   object$chain[[object$chain_length]] <- accept_param$theta
   object$proposed_chain[[object$chain_length-1]] <- proposal_param$theta
 
+  # TODO remove this hack
   object$log_new_marginal_estimator <- new_marginal_estimator
   object$log_old_marginal_estimator <- old_marginal_estimator
-  object$ar_prob <- ar_prob
+
 
   # return latest params
   object
