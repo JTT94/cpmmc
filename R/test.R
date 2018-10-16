@@ -10,6 +10,7 @@
 #   sum(log(mapply( func,  y_t, seq_len(dim(new_u)[3]))))
 # }
 #
+
 # data <- rnorm(1000, 0.5)
 # cpmmc_obj <- cpmmc(data = data,
 #                    theta_0 = 0,
@@ -25,6 +26,7 @@
 # cpmmc_obj <- run_mh(cpmmc_obj, nsim = 10^4)
 # after_time <- Sys.time()
 # print((after_time - before_time))
+
 #
 #
 # theta_chain <- sapply(cpmmc_obj$accept_chain, function(x) x$theta)
