@@ -36,17 +36,16 @@ cpmmc <- function(data,
     chain_length = 1,
 
     # accepted states in the markov chain
-    accept_chain = list(
-      list(
-        theta = theta_0,
-        u = u_0
-      )
+    chain = list(
+      theta_0
     ),
+
+    # latest state
+    latest_state = list(theta = theta_0, u = u_0),
 
     # proposed states in the markov chain, empty list of lists, first list is the index i.e. 1, 2, 3
     # second list is the paramater at each iteration i.e. theta, u
     proposed_chain = list(
-      list()
     ),
 
     # store rho for methods
@@ -65,22 +64,10 @@ cpmmc <- function(data,
     log_theta_prior_density = log_theta_prior_density
   )
 
-  attr(obj,'class') <- 'cpmmc' # #TODO inherit mh class, once implemented
+  attr(obj,'class') <- c('cpmmc', 'metropolis_hastings', 'markov_chain') # #TODO inherit mh class, once implemented
 
   obj
 }
-
-#' S3 Implementatio of get_state generic method for cpmmc
-#'
-#' Accesses the latest state of markov chain for cpmmc object
-#'
-#' @param cpmmc object
-#' @return list, parameters of latest state
-#' @export
-get_state.cpmmc <- function(object){
-  tail(object$accept_chain, n=1)[[1]]
-}
-
 
 #' S3 Implementatio of single_mh_step generic method for cpmmc
 #'
@@ -90,7 +77,7 @@ get_state.cpmmc <- function(object){
 #' @param cpmmc object
 #' @return object, with chains of parameters updated
 #' @export
-single_mh_step.cpmmc <- function(object){
+single_transition.cpmmc <- function(object){
   # get current state
   latest_state <- get_state(object)
   old_theta <- latest_state$theta
@@ -135,9 +122,10 @@ single_mh_step.cpmmc <- function(object){
   }
 
   # set proposal and latest state within object
+  object$latest_state <- accept_param
   object$chain_length <- object$chain_length + 1
-  object$accept_chain[[object$chain_length]] <- accept_param
-  object$proposed_chain[[object$chain_length-1]] <- proposal_param
+  object$chain[[object$chain_length]] <- accept_param$theta
+  object$proposed_chain[[object$chain_length-1]] <- proposal_param$theta
 
   # return latest params
   object
@@ -145,63 +133,8 @@ single_mh_step.cpmmc <- function(object){
 
 
 
-#' S3 Implementatio of run_mh generic method for cpmmc
-#'
-#' Runs Metropolis Hastings Algorithm to generate N new proposals and accepted states from
-#'  the latest state of markov chain for cpmmc object, using intrinsic cpmmc proposals
-#'
-#' @param cpmmc object
-#' @param N number of samples from posterior
-#' @return object, with chains of parameters updated
-#' @export
-run_mh.cpmmc <- function(object, nsim) {
-  # iterate through MH steps
-  for (i in seq_len(nsim)) {
-    object <- single_mh_step(object)
-  }
-
-  # return latest params
-  object
-}
 
 
 
-#' S3 Implementatio of get_chain generic method for cpmmc
-#'
-#' Accesses the proposed and/or accepted chains for cpmmc object
-#'
-#' @param cpmmc object
-#' @param chain type of chain wanted from "proposed", "accepted", "theta", "u", "proposed theta", "proposed u", "accepted theta", "accepted u"
-#' @return chain="proposed" returns a list the proposed chain of theta and u
-#' @return chain="accepted" returns a list the accepted chain of theta and u
-#' @return chain="proposed theta" a list returns the proposed chain of theta
-#' @return chain="proposed u" returns a list the proposed chain of u
-#' @return chain="accepted theta" returns a list the accepted chain of theta
-#' @return chain="accepted u" returns a list the accepted chain of u
-#' @export
-get_chain.cpmmc <- function(object, chain) {
-  if (chain %in% c("proposed", "accepted", "theta", "u", "proposed theta", "proposed u", "accepted theta", "accepted u")) {
-    if (chain == "proposed") {
-      return(object$proposed_chain)
-    }
-    if (chain == "accepted") {
-      return(object$accept_chain)
-    }
-    if (chain == "proposed theta") {
-      return(sapply(object$proposed_chain, function(x) x$theta[[1]]))
-    }
-    if (chain == "proposed u") {
-      return((sapply(object$proposed_chain, function(x) x$u[[1]])))
-    }
-    if (chain == "accepted theta") {
-      return((sapply(object$accept_chain, function(x) x$theta[[1]])))
-    }
-    if (chain == "accepted u") {
-      return((sapply(object$accept_chain, function(x) x$u[[1]])))
-    }
-  } else {
-    stop("The chain wanted is not available.")
-  }
-}
 
 

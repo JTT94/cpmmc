@@ -12,14 +12,10 @@
 #' dim = c(number_of_samples, dimension_of_each_point, number_of_data_points)
 #' @return numeric value, log of importance sampling estimate for g_theta = N(x,1), f_theta = N(theta,1)
 normal_log_IS_estimate <- function(data, theta, new_u){
+  p_hats <- sapply(seq_along(data), function(i) {
+    sum(dnorm(data[i], mean = new_u[,,i] + theta)) / length(new_u[,,i])})
 
-    # vectorised function for each data point
-    func <- function(y, ind){
-      u_t <- (as.matrix(new_u[,,ind]))
-      sum(normal_density(y, mean = u_t + theta)) / nrow(u_t)
-    }
-
-  sum(log(mapply(func, data, seq_len(dim(new_u)[3]))))
+  sum(log(p_hats))
 }
 
 #' Instantiate random_effects_model object
@@ -36,13 +32,13 @@ normal_random_effect_model <- function(data, theta_0, u_0, rho){
                      u_0 = u_0,
                      rho = rho,
                      log_marginal_estimator_func = normal_log_IS_estimate,
-                     log_theta_prior_density = function(x) normal_density(x, log = T),
-                     log_theta_proposal_density = function(old_theta, new_theta) normal_density(new_theta-old_theta, log = T),
-                     theta_proposal_sampler = function(theta) normal_sampler(1, mean = theta)
+                     log_theta_prior_density = function(x) dnorm(x, log = T),
+                     log_theta_proposal_density = function(old_theta, new_theta) dnorm(new_theta-old_theta, log = T),
+                     theta_proposal_sampler = function(theta) rnorm(1, mean = theta)
   )
 
   # set class, inherit cpmmc
-  attr(obj,'class') <- c('random_effects_model', 'cpmmc')
+  attr(obj,'class') <- c('cpmmc', 'metropolis_hastings', 'markov_chain')
 
   # return object
   obj

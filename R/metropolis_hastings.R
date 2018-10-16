@@ -22,7 +22,16 @@ run_mh <- function(object, nsim) {
 }
 
 
-metropolis_hastings <- function(initial_params, target_density, proposal_density, proposal_sampler){
+metropolis_hastings <- function(initial_params, log_target_density, log_proposal_density, proposal_sampler){
+
+  # acceptance probability
+  log_acceptance_probability <- function(current_state, proposal_state){
+    accept_reject_prob <- log_target_density(proposal_state) +
+      log_proposal_density(proposal_state, current_state) -
+      log_target_density(current_state) +
+      log_proposal_density(current_state,proposal_state)
+    return(accept_reject_prob)
+  }
 
   # transition sampler
   transition_sampler <- function(current_state){
@@ -31,10 +40,7 @@ metropolis_hastings <- function(initial_params, target_density, proposal_density
     proposal_state <- proposal_sampler(current_state)
 
     # accept / reject
-    accept_reject_prob <- log(target_density(proposal_state)) +
-      log(proposal_density(proposal_state, current_state)) -
-      log(target_density(current_state)) +
-      log(proposal_density(current_state,proposal_state))
+    accept_reject_prob <- log_acceptance_probability(current_state, proposal_state)
 
     ar <-  log(runif(1)) < accept_reject_prob
 
@@ -45,9 +51,9 @@ metropolis_hastings <- function(initial_params, target_density, proposal_density
     }
   }
 
-  obj <- markov_chain(initial_params, transition_sampler)
-  obj$target_density <- target_density
-  obj$proposal_density <- proposal_density
+  obj <- markov_chain(initial_value = initial_params, transition_kernel=transition_sampler)
+  obj$log_target_density <- log_target_density
+  obj$log_proposal_density <- log_proposal_density
   obj$proposal_sampler <- proposal_sampler
 
   # set class, inherit cpmmc

@@ -48,15 +48,18 @@ run_chain <- function(object, chain_length) {
 #' @param transition_sampler, function, takes current state and returns next state in chain
 #' @return markov_chain object
 #' @export
-markov_chain <- function(intial_value, transition_kernel){
+markov_chain <- function(initial_value, transition_kernel){
 
   # instantiate MC object
   obj <- list(
 
     # markov chain, list of states
     chain = list(
-      intial_value
+      initial_value
     ),
+
+    # latest state
+    latest_state = initial_value,
 
     # kernel to determine next state
     transition_kernel = transition_kernel,
@@ -78,7 +81,7 @@ get_chain.markov_chain <- function(object){
 }
 
 get_state.markov_chain <- function(object){
-  tail(object$chain, n=1)[[1]]
+  object$latest_state
 }
 
 single_transition.markov_chain <- function(object){
@@ -88,6 +91,7 @@ single_transition.markov_chain <- function(object){
   next_state <- object$transition_kernel(current_state)
 
   # set proposal and latest state within object
+  object$latest_state <- next_state
   object$chain_length <- object$chain_length + 1
   object$chain[[object$chain_length]] <- next_state
 
@@ -99,10 +103,13 @@ get_chain_length.markov_chain <- function(object){
   object$chain_length
 }
 
-run_chain.markov_chain <- function(object, nsim){
-  for (i in 1:nsim){
-    object <- single_jump(object)
+run_chain.markov_chain <- function(object, chain_length){
+  for (i in seq_len(chain_length)){
+    if (i %% 500 == 0){
+      print(i)
+    }
+    print(i)
+    object <- single_transition(object)
   }
-
   object
 }
