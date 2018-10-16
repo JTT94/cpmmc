@@ -63,6 +63,3 @@ metropolis_hastings <- function(initial_params, log_target_density, log_proposal
 
 }
 
-single_mh_step.metropolis_hastings <- function(object){
-  single_jump(object)
-}

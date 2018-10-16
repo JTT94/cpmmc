@@ -149,6 +149,7 @@ single_transition.cpmmc <- function(object){
 
   object$log_new_marginal_estimator <- new_marginal_estimator
   object$log_old_marginal_estimator <- old_marginal_estimator
+  object$ar_prob <- ar_prob
 
   # return latest params
   object

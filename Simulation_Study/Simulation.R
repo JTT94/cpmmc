@@ -4,6 +4,10 @@
 # Wrapper Functions
 # ------------------------------------
 
+# MC diagnostics
+#--------------------------------
+h <- function(chain) 1+2*sum((acf(chain, plot = F)$acf[1:30])^2)
+
 # For MH
 # --------------------------------
 log_target_density <- function(data, theta){
@@ -102,15 +106,15 @@ u_0 <- array(rnorm(T_*N_), dim = c(N_,1,T_))
 data <- rnorm(T_,0.5)
 
 # Run comparisons
-exp_2_cpmm <- simulation_study(T_, N_, theta_0, rho, nsim, burnin, u_0, data)
-exp_2_pmm <- simulation_study(T_, N_, theta_0, 0, nsim, burnin, u_0, data)
+exp_2_cpm <- simulation_study(T_, N_, theta_0, rho, nsim, burnin, u_0, data)
+exp_2_pm <- simulation_study(T_, N_, theta_0, 0, nsim, burnin, u_0, data)
 
 mh <- metropolis_hastings(theta_0, log_target_density_theta, log_proposal_density, proposal_sampler)
 mh <- run_chain(mh, nsim)
 exp_2_mh <- mh
 
 chain <- sapply(mh$chain, function(x) x[[1]])
-h <- function(chain) 1+2*sum((acf(chain, plot = F)$acf[1:30])^2)
+
 h(chain)
 acf(chain, plot = F)$acf
 
