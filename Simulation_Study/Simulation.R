@@ -4,7 +4,7 @@
 # Wrapper Functions
 # ------------------------------------
 
-<<<<<<< HEAD
+
 # Calculate acceptance probability
 acceptance_prob <- function(object) {
   theta_chain <- sapply(object$object$chain, function(x) x[[1]])
@@ -17,11 +17,11 @@ acceptance_prob <- function(object) {
   }
   return(ac_num/sim_num)
 }
-=======
+
 # MC diagnostics
 #--------------------------------
 h <- function(chain) 1+2*sum((acf(chain, plot = F)$acf[1:30])^2)
->>>>>>> b896e114adff0b2a7c1a3bed432d8bb3941c9701
+
 
 # For MH
 # --------------------------------
@@ -88,7 +88,7 @@ simulation_study <- function(T_, N_, theta_0, rho, nsum, burnin, u_0, data){
 }
 
 
-# Experiment 1
+# Experiment 1.1
 # --------------------------------
 ## Parameters ----
 
@@ -103,7 +103,17 @@ u_0 <- array(rnorm(T_*N_), dim = c(N_,1,T_))
 data <- rnorm(T_,0.5, sd = sqrt(2))
 
 long_run <- simulation_study(T_, N_, theta_0, rho, nsum, burnin, u_0, data)
-serialize_robject("./Simulation_Study/long_run", long_run)
+serialize_robject("./Simulation_Study/long_run_CPM", long_run_CPM)
+# Time elapsed: 34.5729867140452 mins
+long_run_PM <- simulation_study(T_, N_, theta_0, 0, nsum, burnin, u_0, data)
+serialize_robject("./Simulation_Study/long_run_PM", long_run_PM)
+# Time elapsed: 29.9212190111478 mins
+mh <- metropolis_hastings(theta_0, log_target_density_theta, log_proposal_density, proposal_sampler)
+long_run_MH <- run_chain(mh, nsim)
+serialize_robject("./Simulation_Study/long_run_MH", long_run_MH)
+# Time elapsed: 6.403306 secs
+
+
 
 # Experiment 2
 # --------------------------------
