@@ -38,4 +38,3 @@ get_chain <- function(object, chain){
 
 
 
-

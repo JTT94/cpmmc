@@ -10,23 +10,22 @@
 #   sum(log(mapply( func,  y_t, seq_len(dim(new_u)[3]))))
 # }
 #
-
 # data <- rnorm(1000, 0.5)
 # cpmmc_obj <- cpmmc(data = data,
 #                    theta_0 = 0,
-#                    u_0 = array(rnorm(80*1*1000), dim = c(80,1,1000)),
+#                    u_0 = array(rnorm(1000*80), dim = c(80,1,1000)),
 #                    rho = 0.9,
 #                    log_marginal_estimator_func = importance_estimator,
-#                    log_theta_prior_density = function(x) {dnorm(x, log = T)},
-#                    log_theta_proposal_density = function(old_theta, new_theta) {dnorm(new_theta-old_theta, log = T)},
-#                    theta_proposal_sampler = function(theta) {rnorm(1, mean = theta)}
+#                    log_theta_prior_density = function(x) dnorm(x, log = T),
+#                    log_theta_proposal_density = function(old_theta, new_theta) dnorm(new_theta-old_theta, log = T),
+#                    theta_proposal_sampler = function(theta) rnorm(1, mean = theta)
 # )
+#
 #
 # before_time <- Sys.time()
 # cpmmc_obj <- run_mh(cpmmc_obj, nsim = 10^4)
 # after_time <- Sys.time()
 # print((after_time - before_time))
-
 #
 #
 # theta_chain <- sapply(cpmmc_obj$accept_chain, function(x) x$theta)
