@@ -1,8 +1,8 @@
-context("run_mh")
+context("run_chain")
 library(cpmmc)
 
 
-test_that("run_mh returns desired theta expectations (tolerance 0.02, 1000 normal mean=0.5, sd=1)", {
+test_that("run_chain returns desired theta expectations (tolerance 0.02, 1000 normal mean=0.5, sd=1)", {
   data = rnorm(1000, 0.5, 1)
   cpmmc_obj <- cpmmc(data,
                      theta_0 = 0,
@@ -20,7 +20,7 @@ test_that("run_mh returns desired theta expectations (tolerance 0.02, 1000 norma
 })
 
 
-test_that("run_mh returns desired theta expectations (tolerance 0.02, 1000 normal mean=1, sd=2)", {
+test_that("run_chain returns desired theta expectations (tolerance 0.02, 1000 normal mean=1, sd=2)", {
   data = rnorm(1000, 1, 2)
   cpmmc_obj <- cpmmc(data,
                      theta_0 = 0,
@@ -38,7 +38,7 @@ test_that("run_mh returns desired theta expectations (tolerance 0.02, 1000 norma
 })
 
 
-test_that("run_mh returns desired theta expectations (tolerance 0.02, 1000 normal mean=3, sd=2)", {
+test_that("run_chain returns desired theta expectations (tolerance 0.02, 1000 normal mean=3, sd=2)", {
   data = rnorm(1000, 3, 2)
   cpmmc_obj <- cpmmc(data,
                      theta_0 = 0,
@@ -57,7 +57,7 @@ test_that("run_mh returns desired theta expectations (tolerance 0.02, 1000 norma
 })
 
 
-test_that("run_mh returns desired theta expectations (tolerance 0.02, 1000 normal mean=5, sd=1)", {
+test_that("run_chain returns desired theta expectations (tolerance 0.02, 1000 normal mean=5, sd=1)", {
   data = rnorm(1000, 5, 1)
   cpmmc_obj <- cpmmc(data,
                      theta_0 = 0,
