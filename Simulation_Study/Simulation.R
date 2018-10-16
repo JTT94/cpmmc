@@ -126,4 +126,6 @@ acf(chain, plot = F)$acf
 
 
 
+hist(w-z, probability = T)
+
 
