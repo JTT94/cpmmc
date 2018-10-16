@@ -100,10 +100,10 @@ burnin <- 100
 theta_0 <- 0
 # Generate data and initialise ----
 u_0 <- array(rnorm(T_*N_), dim = c(N_,1,T_))
-data <- rnorm(T_,0.5)
+data <- rnorm(T_,0.5, sd = sqrt(2))
 
 long_run <- simulation_study(T_, N_, theta_0, rho, nsum, burnin, u_0, data)
-
+serialize_robject("./Simulation_Study/long_run", long_run)
 
 # Experiment 2
 # --------------------------------
@@ -118,7 +118,7 @@ theta_0 <- 0
 
 # Generate data and initialise ----
 u_0 <- array(rnorm(T_*N_), dim = c(N_,1,T_))
-data <- rnorm(T_,0.5)
+data <- rnorm(T_,0.5, sd = sqrt(2))
 
 # Run comparisons
 exp_2_cpm <- simulation_study(T_, N_, theta_0, rho, nsim, burnin, u_0, data)
@@ -146,7 +146,7 @@ theta_0 <- 0
 
 # Generate data and initialise ----
 u_0 <- array(rnorm(T_*N_), dim = c(N_,1,T_))
-data <- rnorm(T_,0.5)
+data <- rnorm(T_,0.5, sd = sqrt(2))
 
 # Run comparisons
 exp_3_cpm <- simulation_study(T_, N_, theta_0, rho, nsim, burnin, u_0, data)
@@ -175,7 +175,7 @@ theta_0 <- 0
 
 # Generate data and initialise ----
 u_0 <- array(rnorm(T_*N_), dim = c(N_,1,T_))
-data <- rnorm(T_,0.5)
+data <- rnorm(T_,0.5, sd = sqrt(2))
 
 # Run comparisons
 exp_4cpm <- simulation_study(T_, N_, theta_0, rho, nsim, burnin, u_0, data)

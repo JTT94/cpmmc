@@ -1,6 +1,4 @@
 
-file_path <- "./test"
-object <-
 
 serialize_robject <- function(file_path, robject){
   outCon <- file(file_path, "w")
