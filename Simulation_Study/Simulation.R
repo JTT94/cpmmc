@@ -4,6 +4,7 @@
 # Wrapper Functions
 # ------------------------------------
 
+<<<<<<< HEAD
 # Calculate acceptance probability
 acceptance_prob <- function(object) {
   theta_chain <- sapply(object$object$chain, function(x) x[[1]])
@@ -16,6 +17,11 @@ acceptance_prob <- function(object) {
   }
   return(ac_num/sim_num)
 }
+=======
+# MC diagnostics
+#--------------------------------
+h <- function(chain) 1+2*sum((acf(chain, plot = F)$acf[1:30])^2)
+>>>>>>> b896e114adff0b2a7c1a3bed432d8bb3941c9701
 
 # For MH
 # --------------------------------
@@ -115,24 +121,73 @@ u_0 <- array(rnorm(T_*N_), dim = c(N_,1,T_))
 data <- rnorm(T_,0.5)
 
 # Run comparisons
-exp_2_cpmm <- simulation_study(T_, N_, theta_0, rho, nsim, burnin, u_0, data)
-exp_2_pmm <- simulation_study(T_, N_, theta_0, 0, nsim, burnin, u_0, data)
+exp_2_cpm <- simulation_study(T_, N_, theta_0, rho, nsim, burnin, u_0, data)
+exp_2_pm <- simulation_study(T_, N_, theta_0, 0, nsim, burnin, u_0, data)
 
 mh <- metropolis_hastings(theta_0, log_target_density_theta, log_proposal_density, proposal_sampler)
 mh <- run_chain(mh, nsim)
 exp_2_mh <- mh
 
-chain <- sapply(mh$chain, function(x) x[[1]])
-h <- function(chain) 1+2*sum((acf(chain, plot = F)$acf[1:30])^2)
-h(chain)
-acf(chain, plot = F)$acf
+serialize_robject("./Simulation_Study/cpm_exp2", exp_2_cpm)
+serialize_robject("./Simulation_Study/pm_exp2", exp_2_pm)
+serialize_robject("./Simulation_Study/mh_exp2", exp_2_mh)
+
+
+# Experiment 3
+# --------------------------------
+## Parameters ----
+
+T_ <- 2048
+N_ <- 28
+rho <- 0.9925
+nsim <- 10^4
+burnin <- 100
+theta_0 <- 0
+
+# Generate data and initialise ----
+u_0 <- array(rnorm(T_*N_), dim = c(N_,1,T_))
+data <- rnorm(T_,0.5)
+
+# Run comparisons
+exp_3_cpm <- simulation_study(T_, N_, theta_0, rho, nsim, burnin, u_0, data)
+exp_3_pm <- simulation_study(T_, N_, theta_0, 0, nsim, burnin, u_0, data)
+
+mh <- metropolis_hastings(theta_0, log_target_density_theta, log_proposal_density, proposal_sampler)
+mh <- run_chain(mh, nsim)
+exp_3_mh <- mh
+
+serialize_robject("./Simulation_Study/cpm_exp3", exp_3_cpm)
+serialize_robject("./Simulation_Study/pm_exp3", exp_3_pm)
+serialize_robject("./Simulation_Study/mh_exp3", exp_3_mh)
 
 
 
+# Experiment 4
+# --------------------------------
+## Parameters ----
 
+T_ <- 4096
+N_ <- 39
+rho <- 0.9947
+nsim <- 10^4
+burnin <- 100
+theta_0 <- 0
 
+# Generate data and initialise ----
+u_0 <- array(rnorm(T_*N_), dim = c(N_,1,T_))
+data <- rnorm(T_,0.5)
 
+# Run comparisons
+exp_4cpm <- simulation_study(T_, N_, theta_0, rho, nsim, burnin, u_0, data)
+exp_4_pm <- simulation_study(T_, N_, theta_0, 0, nsim, burnin, u_0, data)
 
+mh <- metropolis_hastings(theta_0, log_target_density_theta, log_proposal_density, proposal_sampler)
+mh <- run_chain(mh, nsim)
+exp_4_mh <- mh
+
+serialize_robject("./Simulation_Study/cpm_exp4", exp_4_cpm)
+serialize_robject("./Simulation_Study/pm_exp4", exp_4_pm)
+serialize_robject("./Simulation_Study/mh_exp4", exp_4_mh)
 
 
 
