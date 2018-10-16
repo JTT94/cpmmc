@@ -139,8 +139,8 @@ p(y_t| \theta)=& \int g_\theta(y_t|x_t,\theta)f_\theta(x_t) dx_t
 If the integral for $p(y_t| \theta)$ is intractable, one can use importance sampling to form an unbiased estimator $\hat{p}(y_t| \theta)$, where $N$ is the number of proposal samples. The likelihood estimator and importance sampling weights are given as
 \begin{align*}
 \hat{p}(y_{1:T}| \theta, U) =& \prod_{t=1}^{T} \hat{p}(y_t|\theta, U_t) \\
-\hat{p}(y_t| \theta, U_t)=& \frac{1}{N} \sum_{i=i}^N w(y_t, U_{t,i}; \theta \\
-w(y_t, U_{t,i} =& \frac{g_\theta(y_t|X_{t,i})f_\theta(X_{t,i})}{q_\theta(X_{t,i}|y_t)}
+\hat{p}(y_t| \theta, U_t)=& \frac{1}{N} \sum_{i=i}^N w(y_t, U_{t,i}; \theta ) \\
+w(y_t, U_{t,i}) =& \frac{g_\theta(y_t|X_{t,i})f_\theta(X_{t,i})}{q_\theta(X_{t,i}|y_t)}
 \end{align*}
 assuming that there exists a deterministic map $ \Xi: \mathbb{R}^p \times \Theta \rightarrow \mathbb{R}^k$ such that $X_{t,i} = \Xi(U_{t,i}, \theta) \sim q_\theta(\cdot|y_t)$ and $U_{t,i} \sim \mathcal{N}(0_p, I_p) $.
 
@@ -172,7 +172,54 @@ N_T =& \beta T ^{\frac{1}{2}} \\
 
   \section{Application}
 
+
+
+
+
+
   \subsection{Simulation Study}
+  In order to compare the performance of CPM algorithm with PM and MH algorithms, we first need to introduce the following Gaussian random effects model.
+
+  \begin{align*}
+  X_t &\overset{\text{i.i.d.}}{\sim} N(\theta, 1) \\
+  Y_t | X_t &\overset{\hphantom{\text{i.i.d.}}}{\sim} N(X_t, 1)
+  \end{align*}
+
+The true value for the parameter of interest, $\theta$, is set to be $0.5$ when simulating observations $y_{1:T}$. All of the three algorithms use the same random walk proposal distribution. Under this particular construction, we can obtain the true likelihood $Y_t \sim N(\theta, 2)$, which not only can be used to directly implement the MH algorithm, but also enables the computation of loglikelihood error and loglikelihood error ratio. In addition, we can use importance sampling to obtain a non-negative, unbiased estimator for the likelihood, given bellow, to compute the acceptance probabilities for the PM and CPM schemes.
+\begin{align*}
+\hat{p}(y_{1:T}| \theta, U) =& \prod_{t=1}^{T} \hat{p}(y_t|\theta, U_t) \\
+\hat{p}(y_t| \theta, U_t)=& \frac{1}{N} \sum_{i=i}^N \psi (y_t; \theta + U_{t,i}, 1)
+\end{align*}
+where $\psi(\cdot; \mu, \sigma)$ denotes the density for the Gaussian distribution with mean $\mu$ and variance $\sigma^2$, and the auxilary variables $U_{t,i}$ are realisations from independent standard Gaussian distributions. \\
+
+
+\subsection{Compare CPM with MH and PM}
+
+
+-- compare $\theta$ estimated by the three algorithms with true value
+-- plots of accepted chains, correlogram
+-- calculate acceptance probability for three algorithms
+-- the loglikelihood error and loglikelihood error ratios $Z$, $R$ and $W=Z+R$ for PM and CPM
+--
+
+
+\subsection{Compare CPM using different $N$ and $T$ values}
+
+
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{ccccccc}
+\hline \hline
+$T$    & $N$  & $\rho$   & $\kappa^2$ & $\bar{\rho}$ & $IF$ & $RIF$ \\ \hline
+$1024$ & $19$ & $0.9864$ & $2.0$      &              &      &       \\ \hline
+$2048$ & $28$ & $0.9925$ & $1.9$      &              &      &       \\ \hline
+$4096$ & $39$ & $0.9947$ & $1.7$      &              &      &       \\ \hline \hline
+\end{tabular}
+\end{center}
+\end{table}
+
+
+
 
   \section{Conclusion}
 
