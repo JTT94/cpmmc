@@ -16,7 +16,7 @@
 % The line below tells R to use knitr on this.
 %\VignetteEngine{knitr::knitr}
 
-\title{An R Implementation for Correlated Pseudo Marginal Monte Carlo Methods}
+\title{An R Implementation for Correlated Pseudo-Marginal Monte Carlo Methods}
 \author{James Thornton \and Yuxi Jiang}
 
 \usepackage{Sweave}
@@ -27,7 +27,7 @@
 \maketitle
 
 \begin{abstract}
-This document briefly summarises the statistical methodology underlying the \texttt{cpmmc} package, located at \url{https://github.com/JTT94/cpmmc}. In particular, this paper looks at the Correlated Pseudo Marginal Markov Chain theory introduced by \cite{cpmmDeligiannidis2015} and application to the random effects model.
+This document briefly summarises the statistical methodology underlying the \texttt{cpmmc} package, located at \url{https://github.com/JTT94/cpmmc}. In particular, this paper looks at the Correlated Pseudo-Marginal Markov Chain theory introduced by \cite{cpmmDeligiannidis2015} and application to the random effects model.
 \end{abstract}
 
 \section{Background}
@@ -83,7 +83,7 @@ To target $\pi$, the CPM first augments the state from $\theta$ to $(\theta, U)$
 $$\bar{\pi}(\theta, u) = \pi(\theta)m(u)\frac{\hat{p}(y_{1:T}| \theta, u)}{p(y_{1:T}| \theta)}$$
 By simulating a Markov chain to target $\bar{\pi}$, one can record only the $\theta$ values in order to target $\pi$. Given that $\hat{p} (y_{1:T} | \theta, U)$ is unbiased, we have that $\pi(\theta)$ is a marginal density of $\bar{\pi} (\theta, u)$, as $\int \bar{\pi}(\theta,u)du = \pi(\theta)$. \\
 
-The Correlated Pseudo Marginal algorithm uses the following assumptions, as well as the Metropolis Hastings algorithm to target $\bar{\pi}$ with a choice of transition kernel $K$ to induce correlated $U$ proposals.
+The Correlated Pseudo-Marginal algorithm uses the following assumptions, as well as the Metropolis Hastings algorithm to target $\bar{\pi}$ with a choice of transition kernel $K$ to induce correlated $U$ proposals.
 \begin{itemize}
  \item $\hat{p}(y_{1:T}| \theta, U)$ is a non-negative, unbiased estimator of likelihood $p(y_{1:T}| \theta)$
  \item $U \sim m$
@@ -97,7 +97,7 @@ Informally, the intuition behind the CPM, and in particular the correlation aspe
 
 
 \begin{algorithm}[H]
-\caption{Correlated Pseudo Marginal Algorithm}\label{euclid}
+\caption{Correlated Pseudo-Marginal Algorithm}\label{euclid}
 \begin{algorithmic}[1]
 \BState  $\text{Initialise }  :$ \newline
 \indent \hspace{\algorithmicindent} $\theta_0 \sim p_\theta$ \newline
@@ -119,6 +119,8 @@ $ \epsilon \sim \mathcal{N}(0_M, I_M)$ \newline
 \centerline{$\text{Set } (\theta_t, U_t) \gets (\theta^\prime, U^\prime) \text{ else } (\theta_t, U_t) \gets (\theta_{t-1}, U_{t-1}) $}
 \end{algorithmic}
 \end{algorithm}
+
+Notice that by setting $K(u, u\prime) = m(u \prime)$ and let $\rho = 0$, we obtain the PM algorithm.
 
 
 \subsection{Random Effect Model}
