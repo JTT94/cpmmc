@@ -2,7 +2,7 @@
 % Please edit documentation in R/normal_dist_helpers.R
 \name{normal_sampler}
 \alias{normal_sampler}
-\title{Helper function to perform idensity calculation for univariate and multivariate normal distribution}
+\title{Helper function to perform density calculation for univariate and multivariate normal distribution}
 \usage{
 normal_sampler(n, mean = NA, sigma = NA, ...)
 }

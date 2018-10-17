@@ -120,6 +120,7 @@ $ \epsilon \sim \mathcal{N}(0_M, I_M)$ \newline
 \end{algorithmic}
 \end{algorithm}
 
+Notice that by setting $K(u, u\prime) = m(u \prime)$ and let $\rho = 0$ in the CPM algorithm given above, we will obtain the PM algorithm.
 
 \subsection{Random Effect Model}
 
@@ -144,7 +145,7 @@ w(y_t, U_{t,i}) =& \frac{g_\theta(y_t|X_{t,i})f_\theta(X_{t,i})}{q_\theta(X_{t,i
 \end{align*}
 assuming that there exists a deterministic map $ \Xi: \mathbb{R}^p \times \Theta \rightarrow \mathbb{R}^k$ such that $X_{t,i} = \Xi(U_{t,i}, \theta) \sim q_\theta(\cdot|y_t)$ and $U_{t,i} \sim \mathcal{N}(0_p, I_p) $.
 
-\subsection{Key Results on Parameter Tuning}
+\subsection{Key Results on Parameter Tuning and Optimisation}
 
 Other than introducing the approach, the primary theoretic contributions of \cite{cpmmDeligiannidis2015} are in specifying the distributions of the loglikelihood error, $Z_T(\theta)$, and loglikelihood error ratio, $R_T(\theta, \theta^\prime)$ under correlated $U$ proposals and under non-correlated for comparison of CPM with the PM algorithm.
 \begin{align*}
@@ -159,14 +160,17 @@ N_T =& \beta T ^{\frac{1}{2}} \\
 \rho =& \exp(-\psi \beta T ^ {-\frac{1}{2}}) = \exp(-\psi \frac{N_T}{T})
 \end{align*}
 
-\cite{cpmmDeligiannidis2015} then provides a heuristic to find these parameters by minimizing a specific objective function, however due to the involved nature, it has been excluded from this document.
+\cite{cpmmDeligiannidis2015} then provides a heuristic to find these parameters by minimizing the objective function:
+$$CT(h, Q_T) = N_T \times IF(h, Q_T)$$
+where $h$ is a real-valued measurable function, and $IF(h, Q_T)$ is a measure of the integrated autocorrelation time of $\{h(\theta_t) ; t \in \mathbb{N}\}$, where $\{\theta_t\}_{t \in \mathbb{N}}$ are generated under Markov kernel $Q_T$, given by:
+$$IF(h, Q_T) = 1 + 2 \sum_{n=1}^{\infty} \phi_n (h, Q_T)$$
+For $n>0$, $\phi_n$ denotes the autocorrelation at lag $n$. Thus, $IF(h, Q_T)$ provides a measure for inefficiency, and can be used to compare results and performances between different Markov Chain Monte Carlo schemes by looking at the autocorrelation within the sampled chains. \\
+
+Due to the involved nature, the detailed analysis of the heuristic has been excluded from this document.
 
 
 
-\subsection{Discussion}
-    -- Higher dimension, size of M =pTN \\
-    -- Difficulties when estimator is not "nice" i.e. continuous \\
-    -- Implementation weak points, inefficienciesm, have to loop through each data point and sample N for each point
+
 
 
 
@@ -239,6 +243,12 @@ $T$  & $N_T$     & $\rho$    & $RIF_{CPM}$              & $RIF_{PM}$            
 8192 & 80        & 0.9963    & 1.2                      & 3.2                     \\ \hline
 \end{tabular}
 \end{table}
+
+  \section{Discussion}
+    -- Higher dimension, size of M =pTN \\
+    -- Difficulties when estimator is not "nice" i.e. continuous \\
+    -- Implementation weak points, inefficienciesm, have to loop through each data point and sample N for each point
+
 
   \section{Conclusion}
 

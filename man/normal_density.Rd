@@ -2,7 +2,7 @@
 % Please edit documentation in R/normal_dist_helpers.R
 \name{normal_density}
 \alias{normal_density}
-\title{Helper function to generate samplesfor univariate and multivariate normal distribution}
+\title{Helper function to generate samples for univariate and multivariate normal distribution}
 \usage{
 normal_density(data, mean = NA, sigma = NA, ...)
 }

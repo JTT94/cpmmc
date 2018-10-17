@@ -1,5 +1,16 @@
 
 
+#' Instantiate metropolis_hastings object and set initial parameters
+#'
+#' This is an S3 object constructor helper function for class metropolis_hastings which inherit from markov_chain class
+#'
+#' @param initial_params, numeric for initial state of chain, list for multiple named parameters
+#' @param log_target_density, the log target density for the MH algorithm, i.e. the log density for the stationary distribution of the Markov Chain
+#' @param log_proposal_density, log density function for parameter proposals
+#' @param proposal_sampler, distribution function to sample new parameter proposals
+#' @return metropolis_hastings object
+#' @export
+
 metropolis_hastings <- function(initial_params, log_target_density, log_proposal_density, proposal_sampler){
 
   # acceptance probability

@@ -16,7 +16,7 @@ check_mean_sigma <- function(data, mean, sigma){
   list(mean=mean, sigma = sigma)
 }
 
-#' Helper function to perform idensity calculation for univariate and multivariate normal distribution
+#' Helper function to perform density calculation for univariate and multivariate normal distribution
 #'
 #' Calculates density
 #'
@@ -38,7 +38,7 @@ normal_sampler <- function(n, mean=NA, sigma=NA, ...){
 
 }
 
-#' Helper function to generate samplesfor univariate and multivariate normal distribution
+#' Helper function to generate samples for univariate and multivariate normal distribution
 #'
 #' Samples normal distribution
 #'

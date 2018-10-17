@@ -2,18 +2,18 @@
 % Please edit documentation in R/markov_chain.R
 \name{markov_chain}
 \alias{markov_chain}
-\title{Instantiate Markov chain}
+\title{Instantiate Markov chain object and set the transition kernel}
 \usage{
 markov_chain(initial_value, transition_kernel)
 }
 \arguments{
-\item{intial_value, }{numeric for initial state of chain, list for multiple named params}
+\item{transition_kernel, }{function for the transition kernel of the Markov process, which takes the current state and returns the next state of the process}
 
-\item{transition_sampler, }{function, takes current state and returns next state in chain}
+\item{intial_value, }{numeric for initial state of chain, list for multiple named parameters}
 }
 \value{
 markov_chain object
 }
 \description{
-This is an S3 object constructor helper function for class random_effects_model which inherics from cpmmc class
+This is an S3 object constructor helper function for class markov_chain
 }
