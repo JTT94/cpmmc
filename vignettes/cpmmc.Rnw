@@ -194,8 +194,7 @@ We also chooise prior $\theta \sim \mathcal{N}(0,1)$. Under this particular cons
 
 The three algorithms use the same random walk proposal distribution, $ \theta^\prime \sim \mathcal{N}(\theta, 0.02^2)$, where $0.02$ was chosen to coincide with \cite{cpmmDeligiannidis2015}. In addition, we use importance sampling to obtain a non-negative, unbiased estimator for the likelihood, given bellow, to compute the acceptance probabilities for the PM and CPM schemes.\\
 
-The true value for the 'unknown' parameter of interest, $\theta$, is set to be $0.5$ when generating observations $y_{1:T}$.
-
+The true value for the 'unknown' parameter of interest, $\theta$, is set to be $0.5$ when generating observations $y_{1:T}$. For the CPM algorithm, the likelihood estimator function is given as
 \begin{align}
 \hat{p}(y_{1:T}| \theta, U) =& \prod_{t=1}^{T} \hat{p}(y_t|\theta, U_t) \\
 \hat{p}(y_t| \theta, U_t)=& \frac{1}{N} \sum_{i=i}^N \psi (y_t; \theta + U_{t,i}, 1)
@@ -205,19 +204,19 @@ where $\psi(\cdot; \mu, \sigma^2)$ denotes the density for the Gaussian distribu
 
 \begin{figure}[H]
   \centerline{\includegraphics[scale=1]{experi1_plots}}
-  \label{fig:theFig}
   \caption{Top row (left to right): Trace of $W_T$ (blue) and $Z_T$ (red) against iteration index; Trace of $R_T=W_T-Z_T$; histogram of $Z_T$.  Bottom row: Histogram of R, correlogram of acceptance chain for $\theta$; trace of accepted $\theta$ (blue) vs proposed (red). Where $Z_T$ and $R_T$ are as defined in \eqref{eq:Z} and \eqref{eq:R} and $W_T = \log(\hat{p}(Y_{1:T}| \theta^\prime, U^\prime)) - \log(p(Y_{1:T}|\theta^\prime))$. Data taken from case where $T=8192$ in table \ref{tab:table}}
+   \label{fig:theFig}
 \end{figure}
 
-As seen by the figure above, $R_T$ empirically appears normal, as suggested aluded to in section \ref{norm_dist}. $Z_T$ however, appears far from normally distributed, insinuating a possible lack of convergence or slow convergence.
+As seen in Figure \ref{fig:theFig}, $R_T$ empirically appears normal, as suggested aluded to in section \ref{norm_dist}. $Z_T$ however, appears far from normally distributed, insinuating a possible lack of convergence or slow convergence.
 
 \begin{figure}[H]
   \centerline{\includegraphics[scale=1]{acf_plots}}
-  \label{fig:acf}
-  \caption{ACF plots for algorithms MH, CPM, PM. Data taken from case where $T=8192$ in table \ref{tab:table}}
+  \caption{ACF plots for algorithms MH, CPM, PM. Data taken from case where $T=8192$ in Table \ref{tab:table}}
+    \label{fig:acf}
 \end{figure}
 
-As can be seen in the plot above, correlation drops-off as lag is increased at a much higher rate using the CPM compared to PM algorithm, and again quicker in the MH. This would likely insinuate a faster exploration of the state-space, and faster convergence to the target distribution asif the chain remains in a trapped local area, then it would exhibit a slowly decreacing autocorrelation. This is essentially what metric $IF$ \eqref{eq:IF} measures.
+As can be seen in Figure \ref{fig:acf}, correlation drops-off as lag is increased at a much higher rate using the CPM compared to PM algorithm, and again quicker in the MH. This would likely insinuate a faster exploration of the state-space, and faster convergence to the target distribution asif the chain remains in a trapped local area, then it would exhibit a slowly decreacing autocorrelation. This is essentially what metric $IF$ \eqref{eq:IF} measures.
 
 \subsection{Benchmarking: MH, CPM, PM}
 
