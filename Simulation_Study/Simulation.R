@@ -17,6 +17,7 @@ acceptance_prob <- function(theta_chain) {
   return(ac_num/sim_num)
 }
 
+
 # MC diagnostics
 #--------------------------------
 h <- function(chain, max_lag) 1+2*sum((acf(chain, plot = F)$acf[seq_len(max_lag)])^2)
