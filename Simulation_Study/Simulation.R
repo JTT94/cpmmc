@@ -6,11 +6,10 @@
 
 
 # Calculate acceptance probability
-acceptance_prob <- function(object) {
-  theta_chain <- sapply(object$object$chain, function(x) x[[1]])
+acceptance_prob <- function(theta_chain) {
   ac_num <- 0
   sim_num <- length(theta_chain) - 1
-  for (i in (seq_len(theta_chain)-1)) {
+  for (i in (seq_along(sim_num))) {
     if (theta_chain[i] != theta_chain[i+1]) {
       ac_num <- ac_num + 1
     }
@@ -20,13 +19,13 @@ acceptance_prob <- function(object) {
 
 # MC diagnostics
 #--------------------------------
-h <- function(chain) 1+2*sum((acf(chain, plot = F)$acf[1:30])^2)
+h <- function(chain, max_lag) 1+2*sum((acf(chain, plot = F)$acf[seq_len(max_lag)])^2)
 
 
 # For MH
 # --------------------------------
 log_target_density <- function(data, theta){
-  (sum(dnorm(data, mean = theta, sd = sqrt(2), log = T)))
+  (sum(dnorm(data, mean = theta, sd = sqrt(2), log = T))) + dnorm(theta, log = T, sd = 1)
 }
 
 log_target_density_theta <- function(theta){
@@ -34,11 +33,11 @@ log_target_density_theta <- function(theta){
 }
 
 proposal_sampler <- function(state){
-  rnorm(1, mean = state)
+  rnorm(1, mean = state, sd = 0.02)
 }
 
 log_proposal_density <- function(state, proposal){
-  dnorm(proposal-state, log=T)
+  dnorm(proposal, mean = state, log=T, sd = 0.02)
 }
 
 # For PMMC / CPMMC
@@ -50,7 +49,7 @@ simulation_study <- function(T_, N_, theta_0, rho, nsum, burnin, u_0, data){
                                     theta_0 = theta_0,
                                     u_0 = u_0,
                                     rho = rho,
-                                    log_theta_prior_density = function(x) dnorm(x, log = T, sd = 3),
+                                    log_theta_prior_density = function(x) dnorm(x, log = T, sd = 1),
                                     log_theta_proposal_density = function(old_theta, new_theta) dnorm(new_theta-old_theta, log = T, sd=0.02),
                                     theta_proposal_sampler = function(x) rnorm(1, mean = x, sd = 0.02)
   )
@@ -86,32 +85,6 @@ simulation_study <- function(T_, N_, theta_0, rho, nsum, burnin, u_0, data){
     )
   )
 }
-
-
-# Experiment 1.1
-# --------------------------------
-## Parameters ----
-
-T_ <- 8192
-N_ <- 80
-rho <- 0.9963
-nsim <- 10^4
-burnin <- 100
-theta_0 <- 0
-# Generate data and initialise ----
-u_0 <- array(rnorm(T_*N_), dim = c(N_,1,T_))
-data <- rnorm(T_,0.5, sd = sqrt(2))
-
-long_run <- simulation_study(T_, N_, theta_0, rho, nsum, burnin, u_0, data)
-serialize_robject("./Simulation_Study/long_run_CPM", long_run_CPM)
-# Time elapsed: 34.5729867140452 mins
-long_run_PM <- simulation_study(T_, N_, theta_0, 0, nsum, burnin, u_0, data)
-serialize_robject("./Simulation_Study/long_run_PM", long_run_PM)
-# Time elapsed: 29.9212190111478 mins
-mh <- metropolis_hastings(theta_0, log_target_density_theta, log_proposal_density, proposal_sampler)
-long_run_MH <- run_chain(mh, nsim)
-serialize_robject("./Simulation_Study/long_run_MH", long_run_MH)
-# Time elapsed: 6.403306 secs
 
 
 
@@ -188,7 +161,7 @@ u_0 <- array(rnorm(T_*N_), dim = c(N_,1,T_))
 data <- rnorm(T_,0.5, sd = sqrt(2))
 
 # Run comparisons
-exp_4cpm <- simulation_study(T_, N_, theta_0, rho, nsim, burnin, u_0, data)
+exp_4_cpm <- simulation_study(T_, N_, theta_0, rho, nsim, burnin, u_0, data)
 exp_4_pm <- simulation_study(T_, N_, theta_0, 0, nsim, burnin, u_0, data)
 
 mh <- metropolis_hastings(theta_0, log_target_density_theta, log_proposal_density, proposal_sampler)
@@ -199,5 +172,52 @@ serialize_robject("./Simulation_Study/cpm_exp4", exp_4_cpm)
 serialize_robject("./Simulation_Study/pm_exp4", exp_4_pm)
 serialize_robject("./Simulation_Study/mh_exp4", exp_4_mh)
 
+# Experiment 1.1
+# --------------------------------
+## Parameters ----
 
+T_ <- 8192
+N_ <- 80
+rho <- 0.9963
+nsim <- 10^4
+burnin <- 100
+theta_0 <- 0
+# Generate data and initialise ----
+u_0 <- array(rnorm(T_*N_), dim = c(N_,1,T_))
+data <- rnorm(T_,0.5, sd = sqrt(2))
 
+long_run_CPM <- simulation_study(T_, N_, theta_0, rho, nsum, burnin, u_0, data)
+serialize_robject("./Simulation_Study/cpm_exp1", long_run_CPM)
+# Time elapsed: 34.5729867140452 mins
+long_run_PM <- simulation_study(T_, N_, theta_0, 0, nsum, burnin, u_0, data)
+serialize_robject("./Simulation_Study/pm_exp2", long_run_PM)
+# Time elapsed: 29.9212190111478 mins
+mh <- metropolis_hastings(theta_0, log_target_density_theta, log_proposal_density, proposal_sampler)
+long_run_MH <- run_chain(mh, nsim)
+serialize_robject("./Simulation_Study/mh_exp1", long_run_MH)
+# Time elapsed: 6.403306 secs
+
+# Results
+file_templates <- c("./Simulation_Study/mh_exp", "./Simulation_Study/pm_exp","./Simulation_Study/cpm_exp")
+file_locations <- unlist(lapply(2:4, function(x) paste0(file_templates,x)))
+
+results <- list()
+for (fp in file_locations[1]){
+  print(fp)
+  results[[fp]] <- list()
+  object <- unserialize_robject(fp)
+  if (grepl(pattern = 'pm', x = fp)){
+    thetas <- sapply(object$object$chain, function(x) x[[1]])
+  } else if (grepl(pattern = 'mh', x = fp)){
+    thetas <- sapply(object$chain, function(x) x[[1]])
+  }
+  results[[fp]][['IF']] <- h(thetas, max_lag = 40)
+  #results[[fp]][['A']] <- acceptance_prob(thetas)
+
+}
+results
+mean(thetas)
+mean(data)
+acf(thetas)
+points(thetas, type='l', col='blue')
+plot(thetas, type='l')
