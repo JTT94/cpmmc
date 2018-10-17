@@ -10,7 +10,6 @@
 #' @param proposal_sampler, distribution function to sample new parameter proposals
 #' @return metropolis_hastings object
 #' @export
-
 metropolis_hastings <- function(initial_params, log_target_density, log_proposal_density, proposal_sampler){
 
   # acceptance probability

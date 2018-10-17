@@ -183,7 +183,7 @@ N_ <- 56
 rho <- 0.9962
 nsim <- 10^4
 burnin <- 100
-theta_0 <- 0
+theta_0 <-0
 
 # Generate data and initialise ----
 u_0 <- array(rnorm(T_*N_), dim = c(N_,1,T_))
@@ -234,9 +234,11 @@ serialize_robject("./Simulation_Study/mh_exp1", long_run_MH)
 # Time elapsed: 6.403306 secs
 
 # Results
+# -----------------------------------------------
 file_templates <- c("./Simulation_Study/mh_exp", "./Simulation_Study/pm_exp","./Simulation_Study/cpm_exp")
 file_locations <- unlist(lapply(1:4, function(x) paste0(file_templates,x)))
 
+# Aggregate model runs
 results <- list()
 for (fp in file_locations){
   print(fp)
@@ -254,21 +256,25 @@ for (fp in file_locations){
   results[[fp]][['A']] <- acceptance_prob(thetas)
 
 }
+#Save summary
+serialize_robject('./Simulation_Study/Results_Summary.blob', results)
 
-results <- unserialize_robject("./Simulation_Study/Results_Summary.blob")
 
 # Long run Plots
+#----------------------------------------------
 fp <- './Simulation_Study/cpm_exp1'
 thetas <- results[[fp]]$theta
 w <- results[[fp]]$w
 z <- results[[fp]]$z
-mean(thetas)
-# mean(data)
 
+
+
+# Detailed plot of long run CPM
+# -------------------------------------------------
 obj <- unserialize_robject('./Simulation_Study/cpm_exp1')
 
 par(mfrow=c(2,3))
-burnin <- 1000
+burnin <- 1
 plot_ind <- burnin:(length(z)-burnin)
 plot(plot_ind + burnin, w[plot_ind], type='l', col ='blue', ylab='', xlab='')
 points(plot_ind + burnin,z[plot_ind], type='l', col='red')
@@ -277,7 +283,6 @@ r = w-z
 plot(plot_ind + burnin, r[plot_ind], col='red', type='l', ylab='', xlab='')
 
 hist(z[1000:10^4], breaks = 100, freq = F, main ='Z', xlab ='')
-#hist(w[plot_ind], breaks = 100)
 hist(r, breaks = 100, freq=F, main = 'R', xlab ='')
 acf(thetas, main = '')
 
@@ -286,3 +291,25 @@ prop <- sapply(obj$object$proposed_chain, function(x) x[[1]])
 acc <- sapply(obj$object$chain, function(x) x[[1]])
 plot(plot_ind + burnin, prop[plot_ind], col='red', type='l',ylab='', xlab='')
 points(plot_ind + burnin, acc[plot_ind], col='blue', type='l',ylab='', xlab='')
+
+
+
+# Mixing speed, ACF
+# -------------------------------------------------
+model_runs <- c(
+                 "./Simulation_Study/mh_exp1",
+                 "./Simulation_Study/cpm_exp1",
+                 "./Simulation_Study/pm_exp1")
+
+titles <- c('MH', 'CPM', 'PM')
+par(mfrow = c(1,3))
+for (i in seq_along(model_runs)){
+  fp <- model_runs[i]
+  title <- titles[i]
+  theta <- results[[fp]]$thetas
+  acf(theta, main = title)
+}
+
+
+
+

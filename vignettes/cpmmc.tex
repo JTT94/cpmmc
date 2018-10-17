@@ -1,5 +1,5 @@
 \documentclass{article}
-
+\usepackage[left=4cm, right=4cm, top=2cm]{geometry}
 \usepackage{amsmath, amsthm, amssymb}
 \usepackage{graphicx}
 \usepackage[round]{natbib}
@@ -126,61 +126,61 @@ Notice that by setting $K(u, u\prime) = m(u \prime)$ and let $\rho = 0$ in the C
 \subsection{Random Effect Model}
 
 Define the model as follows:
-\begin{align*}
+\begin{align}
 x \sim& f_\theta(\cdot) \\
 Y_t| X_t \sim& g_\theta(\cdot | X_t)
-\end{align*}
+\end{align}
 where $t \in \mathbb{N}$ and $\{X_t; t>0\}$ are $\mathbb{R}^k$-valued latent variables and $\{Y_t; t>0\}$ are $\mathcal{Y}$-valued observations.\\
 
 For observed data $Y_{1:T}=y_{1:T}$, the likelihood satisfies:
-\begin{align*}
+\begin{align}
 p(y_{1:T})=& \prod_{t=1}^{T} p(y_t|\theta) \\
 p(y_t| \theta)=& \int g_\theta(y_t|x_t,\theta)f_\theta(x_t) dx_t
-\end{align*}
+\end{align}
 
-If the integral for $p(y_t| \theta)$ is intractable, one can use importance sampling to form an unbiased estimator $\hat{p}(y_t| \theta)$, where $N$ is the number of proposal samples. The likelihood estimator and importance sampling weights are given as
-\begin{align*}
+If the integral for $p(y_t| \theta)$ is intractable, one can use importance sampling to form an unbiased estimator $\hat{p}(y_t| \theta)$, where $N$ is the number of proposal samples. The likelihood estimator and importance sampling weights are given by:
+
+\begin{align}
 \hat{p}(y_{1:T}| \theta, U) =& \prod_{t=1}^{T} \hat{p}(y_t|\theta, U_t) \\
 \hat{p}(y_t| \theta, U_t)=& \frac{1}{N} \sum_{i=i}^N w(y_t, U_{t,i}; \theta ) \\
 w(y_t, U_{t,i}) =& \frac{g_\theta(y_t|X_{t,i})f_\theta(X_{t,i})}{q_\theta(X_{t,i}|y_t)}
-\end{align*}
+\end{align}
 assuming that there exists a deterministic map $ \Xi: \mathbb{R}^p \times \Theta \rightarrow \mathbb{R}^k$ such that $X_{t,i} = \Xi(U_{t,i}, \theta) \sim q_\theta(\cdot|y_t)$ and $U_{t,i} \sim \mathcal{N}(0_p, I_p) $.
 
-\subsection{Key Results on Parameter Tuning and Optimisation}
+\subsection{Key Results on Parameter Tuning and Optimisation} \label{norm_dist}
 
 Other than introducing the approach, the primary theoretic contributions of \cite{cpmmDeligiannidis2015} are in specifying the distributions of the loglikelihood error, $Z_T(\theta)$, and loglikelihood error ratio, $R_T(\theta, \theta^\prime)$ under correlated $U$ proposals and under non-correlated for comparison of CPM with the PM algorithm.
-\begin{align*}
-Z_T(\theta) =& \log(\hat{p}(Y_{1:T}| \theta, U)) - \log(p(Y_{1:T}|\theta)) \\
-R_T(\theta, \theta^\prime) =& \log \frac{\hat{p}(Y_{1:T}| \theta^\prime, U^\prime)}{\hat{p}(Y_{1:T}| \theta, U)} - \log \frac{p(Y_{1:T}| \theta^\prime,)}{p(Y_{1:T}| \theta)}
-\end{align*}
+
+\begin{align}
+Z_T(\theta) =& \log(\hat{p}(Y_{1:T}| \theta, U)) - \log(p(Y_{1:T}|\theta))\label{eq:Z} \\
+R_T(\theta, \theta^\prime) =& \log \frac{\hat{p}(Y_{1:T}| \theta^\prime, U^\prime)}{\hat{p}(Y_{1:T}| \theta, U)} - \log \frac{p(Y_{1:T}| \theta^\prime,)}{p(Y_{1:T}| \theta)} \label{eq:R}
+\end{align}
+
 The significance of these results lies in using them to inform choice of parameters $\rho$ and $N$ which controls the correlation and number of Monte Carlo samples in the unbiased estimator respectively. \\
 
 In the interest of brevity, the theorems of \cite{cpmmDeligiannidis2015} which state that $Z_T(\theta)$ and $R_T(\theta, \theta^\prime)$ are asympototically normal are not repeated below. However, the key practical implications are that one should find $\beta>0, \psi>0$ and set the CPM parameters such that:
-\begin{align*}
+
+\begin{align}
 N_T =& \beta T ^{\frac{1}{2}} \\
 \rho =& \exp(-\psi \beta T ^ {-\frac{1}{2}}) = \exp(-\psi \frac{N_T}{T})
-\end{align*}
+\end{align}
 
-\cite{cpmmDeligiannidis2015} then provides a heuristic to find these parameters by minimizing the objective function:
-$$CT(h, Q_T) = N_T \times IF(h, Q_T)$$
-where $h$ is a real-valued measurable function, and $IF(h, Q_T)$ is a measure of the integrated autocorrelation time of $\{h(\theta_t) ; t \in \mathbb{N}\}$, where $\{\theta_t\}_{t \in \mathbb{N}}$ are generated under Markov kernel $Q_T$, given by:
-$$IF(h, Q_T) = 1 + 2 \sum_{n=1}^{\infty} \phi_n (h, Q_T)$$
-For $n>0$, $\phi_n$ denotes the autocorrelation at lag $n$. Thus, $IF(h, Q_T)$ provides a measure for inefficiency, and can be used to compare results and performances between different Markov Chain Monte Carlo schemes by looking at the autocorrelation within the sampled chains. \\
+\cite{cpmmDeligiannidis2015} then provides a heuristic to find these parameters by minimizing the objective function $CT(h, Q_T)$, detailed below.
+
+\begin{align}
+CT(h, Q_T) =& N_T \times IF(h, Q_T) \\
+IF(h, Q_T) =& 1 + 2 \sum_{n=1}^{\infty} \phi_n (h, Q_T) \label{eq:IF}
+\end{align}
+
+
+Let $h$ be some real-valued measurable function. $IF(h, Q_T)$ is a measure of the integrated autocorrelation time of $\{h(\theta_t) ; t \in \mathbb{N}\}$, where $\{\theta_t\}_{t \in \mathbb{N}}$ are generated under Markov kernel $Q_T$.
+
+For $n>0$, $\phi_n$ denotes the autocorrelation at lag $n$. Thus, $IF(h, Q_T)$ provides a measure for inefficiency, and can be used to compare mixing performances between MCMC procedures. \\
 
 Due to the involved nature, the detailed analysis of the heuristic has been excluded from this document.
 
 
-
-
-
-
-
   \section{Application}
-
-
-
-
-
 
   \subsection{Simulation Study}
   In order to compare the performance of CPM algorithm with PM and MH algorithms, we first need to introduce the following Gaussian random effects model.
@@ -193,56 +193,64 @@ Due to the involved nature, the detailed analysis of the heuristic has been excl
 We also chooise prior $\theta \sim \mathcal{N}(0,1)$. Under this particular construction, we can obtain the true likelihood $Y_t \sim N(\theta, 2)$, which not only can be used to directly implement the MH algorithm for benchmarking purposes, but also enables the computation of loglikelihood error and loglikelihood error ratio.\\
 
 
-All of the three algorithms use the same random walk proposal distribution, $ \theta^\prime \sim \mathcal{N}(\theta, 0.02^2)$ . In addition, we use importance sampling to obtain a non-negative, unbiased estimator for the likelihood, given bellow, to compute the acceptance probabilities for the PM and CPM schemes.
+The three algorithms use the same random walk proposal distribution, $ \theta^\prime \sim \mathcal{N}(\theta, 0.02^2)$, where $0.02$ was chosen to coincide with \cite{cpmmDeligiannidis2015}. In addition, we use importance sampling to obtain a non-negative, unbiased estimator for the likelihood, given bellow, to compute the acceptance probabilities for the PM and CPM schemes.\\
 
 The true value for the 'unknown' parameter of interest, $\theta$, is set to be $0.5$ when generating observations $y_{1:T}$.
 
-\begin{align*}
+\begin{align}
 \hat{p}(y_{1:T}| \theta, U) =& \prod_{t=1}^{T} \hat{p}(y_t|\theta, U_t) \\
 \hat{p}(y_t| \theta, U_t)=& \frac{1}{N} \sum_{i=i}^N \psi (y_t; \theta + U_{t,i}, 1)
-\end{align*}
+\end{align}
 where $\psi(\cdot; \mu, \sigma^2)$ denotes the density for the Gaussian distribution with mean $\mu$ and variance $\sigma^2$, and the auxilary variables $U_{t,i}$ are realisations from independent standard Gaussian distributions.
 
 
 \begin{figure}[H]
   \centerline{\includegraphics[scale=1]{experi1_plots}}
   \label{fig:theFig}
-  \caption{test}
+  \caption{Top row (left to right): Trace of $W_T$ (blue) and $Z_T$ (red) against iteration index; Trace of $R_T=W_T-Z_T$; histogram of $Z_T$.  Bottom row: Histogram of R, correlogram of acceptance chain for $\theta$; trace of accepted $\theta$ (blue) vs proposed (red). Where $Z_T$ and $R_T$ are as defined in \eqref{eq:Z} and \eqref{eq:R} and $W_T = \log(\hat{p}(Y_{1:T}| \theta^\prime, U^\prime)) - \log(p(Y_{1:T}|\theta^\prime))$. Data taken from case where $T=8192$ in table \ref{tab:table}}
 \end{figure}
 
+As seen by the figure above, $R_T$ empirically appears normal, as suggested aluded to in section \ref{norm_dist}. $Z_T$ however, appears far from normally distributed, insinuating a possible lack of convergence or slow convergence.
+
+\begin{figure}[H]
+  \centerline{\includegraphics[scale=1]{acf_plots}}
+  \label{fig:acf}
+  \caption{ACF plots for algorithms MH, CPM, PM. Data taken from case where $T=8192$ in table \ref{tab:table}}
+\end{figure}
+
+As can be seen in the plot above, correlation drops-off as lag is increased at a much higher rate using the CPM compared to PM algorithm, and again quicker in the MH. This would likely insinuate a faster exploration of the state-space, and faster convergence to the target distribution asif the chain remains in a trapped local area, then it would exhibit a slowly decreacing autocorrelation. This is essentially what metric $IF$ \eqref{eq:IF} measures.
 
 \subsection{Benchmarking: MH, CPM, PM}
 
--- compare $\theta$ estimated by the three algorithms with true value
--- plots of accepted chains, correlogram
--- calculate acceptance probability for three algorithms
--- time used to run the three algorithms
--- efficiency, mixing, burnin time? stiky chains?
--- the loglikelihood error and loglikelihood error ratios $Z$, $R$ and $W=Z+R$ for PM and CPM
+Table \ref{tab:table} details multiple experiments with various data sizes, $T$, and tuned parameters $\rho$ and $N_T$ across the 3 algorithms: CPM, PM and MH. The table clearly illustrates the higher average acceptance rate for MH over CPM and CPM significantly over PM, and indeed improved (lower) inefficiency scores. This clearly suggests the CPM has noticable benefits over the PM in terms of efficient mixing of the chain, and comparable to the idealised MH, in this toy example. It is still unclear whether these benefits would persist in higher dimensions. It is also certainly worth noting that the CPM algorithm took significantly longer to run than MH.
 
 \begin{table}[H]
-\begin{tabular}{l|ll|lll|lll|}
+\begin{tabular}{|l|ll|lll|lll|}
 \hline
      & \multicolumn{2}{l|}{} & \multicolumn{3}{l|}{Average Acceptance}           & \multicolumn{3}{l|}{Inefficiency Score, $h$} \\
 $T$  & $N_T$     & $\rho$    & $\varrho_{MH}$ & $\varrho_{CPM}$ & $\varrho_{PM}$ & $IF_{MH}$     & $IF_{CPM}$    & $IF_{PM}$    \\ \hline
 1024 & 19        & 0.9894    & 0.85           & 0.45            & 0.0052         & 18.78         & 27.04         & 78.95        \\
 2048 & 28        & 0.9925    & 0.78           & 0.47            & 0.0044         & 11.96         & 21.65         & 76.56        \\
-4096 & 39        & 0.9947    & 11.91          & 0.44            & 0.0040         & 11.91         & 20.54         & 53.66        \\
+4096 & 39        & 0.9947    & 0.72          & 0.44            & 0.0040         & 11.91         & 20.54         & 53.66        \\
 8192 & 80        & 0.9963    & 0.65           & 0.44            & 0.0031         & 19.92         & 24.34         & 64.29        \\ \hline
 \end{tabular}
+\caption{IF is defined by \eqref{eq:IF}, the where the sum is approximated up to lag 40 and $h(\theta)=\theta$, and $\varrho_{x}$ is the average acceptance rate for algorithm $x$. $N_T$ and $\rho$ have been chosen according to heuristic detailed in \cite{cpmmDeligiannidis2015}}
+\label{tab:table}
 \end{table}
 
 
 \begin{table}[H]
-\begin{tabular}{l|ll|ll}
+\centering
+\begin{tabular}{|l|ll|ll|}
 \hline
-     & \multicolumn{2}{l|}{} & \multicolumn{2}{l}{Relative Inefficiency, to $MH$} \\
-$T$  & $N_T$     & $\rho$    & $RIF_{CPM}$              & $RIF_{PM}$              \\ \hline
-1024 & 19        & 0.9894    & 1.44                     & 4.2                     \\
-2048 & 28        & 0.9925    & 1.81                     & 6.4                     \\
-4096 & 39        & 0.9947    & 1.7                      & 4.5                     \\
-8192 & 80        & 0.9963    & 1.2                      & 3.2                     \\ \hline
+     & \multicolumn{2}{l|}{} & \multicolumn{2}{l|}{Relative Inefficiency} \\
+$T$  & $N_T$     & $\rho$    & $RIF_{CPM}$               & $RIF_{PM}$              \\ \hline
+1024 & 19        & 0.9894    & 1.44                      & 4.2                     \\
+2048 & 28        & 0.9925    & 1.81                      & 6.4                     \\
+4096 & 39        & 0.9947    & 1.7                       & 4.5                     \\
+8192 & 80        & 0.9963    & 1.2                       & 3.2                     \\ \hline
 \end{tabular}
+\caption{$RIF_x = IF_x/ IF_{MH}$ for algorithm $x$}
 \end{table}
 
   \section{Discussion}
@@ -254,51 +262,43 @@ $T$  & $N_T$     & $\rho$    & $RIF_{CPM}$              & $RIF_{PM}$            
   \section{Conclusion}
 
 
-% \begin{theorem}
-% Let $N_T = \beta T^\alpha$ with $\frac{1}{3} < \alpha \leq 1$ and $Y_i \overset{i.i.d.}{\sim} \mu$ \\
-%
-% 1) If $\mathbb{E}[\bar{w}(Y, U_{1,1}, \theta)^8] < \infty$ and $U \sim m$, then:\\
-%
-% \centerline{
-% $T^{\frac{\alpha -1}{2}}Z_T{\theta} + \frac{1}{2}T^{\frac{1-\alpha}{2}}\beta^{-1}\gamma(\theta)^2 | \mathcal{Y}^T \Rightarrow \mathcal{N}(0, \beta^{-1}\gamma(\theta)^2)$} \newline
-%
-% 2) If $\mathbb{E}[\bar{w}(Y, U_{1,1}, \theta)^9] < \infty$ and $U \sim \bar{\pi}(\cdot, \theta)$, then:\\
-%
-% \centerline{
-% $T^{\frac{\alpha -1}{2}}Z_T{\theta} - \frac{1}{2}T^{\frac{1-\alpha}{2}}\beta^{-1}\gamma(\theta)^2 | \mathcal{Y}^T \Rightarrow \mathcal{N}(0, \beta^{-1}\gamma(\theta)^2)$}\\
-%
-% \end{theorem}
-%
-% \begin{theorem}
-% Let $\theta, \xi$ be fixed. Assume: \\
-% 1) $\vartheta \mapsto \bar{w}(y_1, u_{1,1}; \vartheta)$ and $\vartheta \mapsto \mathbb{E}[\bar{w}(y_1, u_{1,1}; \vartheta)^9]$ are continuous at $\vartheta = \theta$ for any $ (y_1, u_{1,1} ) \in \mathbb(Y) \times \mathbb{R}^p$ \\
-% 2) $\vartheta \mapsto \gamma(\vartheta)$ is continously differentiable at $\vartheta = \theta$ \\
-% 3) $\mathbb{E}[\bar{w}(Y_1, U_{1,1}; \vartheta)^9] + \mathbb{E}[\gamma(Y_1;\vartheta)^4] < \infty$ \\
-%
-% For $N_T = \beta T^\alpha$ with $\frac{1}{3} < \alpha \leq 1$ and $Y_i \overset{i.i.d.}{\sim} \mu$, $U \sim \bar{\pi}(\cdot, \theta)$ and $U^\prime \sim m$ where $U$ and $U^\prime$ are independent: \\
-%
-% \centerline{
-% $T^{\frac{\alpha -1}{2}}R_T(\theta, \theta + \xi / \sqrt{T}) + T^{\frac{1-\alpha}{2}}\beta^{-1}\gamma(\theta)^2 | \mathcal{Y}^T \Rightarrow \mathcal{N}(0, 2\beta^{-1}\gamma(\theta)^2)$}\\
-%
-% \end{theorem}
-%
-%
-% Theorems 1 and 2 from the paper here for random effect model
-
-%\texttt{align} environment (in the \texttt{amsmath} package) for displayed equations:
-%\begin{align*}
-% lose the *'s if you want equation numbers
-%f(x) &= x^3 - x - 1\\
-%g(y) &= y^4 + 2y
-%\end{align*}
-%You can cite in two ways using the \texttt{natbib} package:
-%\citep{articlekey}
-%and
-%\citet{articlekey}.
-
-  % now generate the bibliography from file mybib.bib
-  \bibliographystyle{plainnat}
-  \bibliography{mybib}
-
-
-  \end{document}
+\section{Example code}
+\begin{Schunk}
+\begin{Sinput}
+> library(cpmmc)
+> # Initialise parameters ----
+> T_ <- 8192
+> N_ <- 80
+> rho <- 0.9963
+> nsim <- 10^4
+> burnin <- 100
+> theta_0 <- 0
+> u_0 <- array(rnorm(T_*N_), dim = c(N_,1,T_))
+> # Input densities
+> # For MH
+> # --------------------------------
+> 
+> # density function, with param as current state
+> log_target_density <- function(data, theta){
++   (sum(dnorm(data, mean = theta, sd = sqrt(2), log = T))) + dnorm(theta, log = T, sd = 1)
++ }
+> log_target_density_theta <- function(theta){
++   log_target_density(data, theta)
++ }
+> # density function with argument as current state
+> log_proposal_density <- function(state, proposal){
++   dnorm(proposal, mean = state, log=T, sd = 0.02)
++ }
+> # sampler function, with argument as current state
+> proposal_sampler <- function(state){
++   rnorm(1, mean = state, sd = 0.02)
++ }
+> # Generate data and initialise ----
+> data <- rnorm(T_,0.5, sd = sqrt(2))
+> # Instantiate models ----
+> 
+> # MH (class which class cpmmc inherits from)
+> rem_mh <- metropolis_hastings(theta_0, # inital value
++                           log_target_density_theta,
++                           log_proposal_density,
++                           proposal_sampler)
