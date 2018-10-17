@@ -20,8 +20,16 @@ normal_log_IS_estimate <- function(data, theta, new_u){
 
 #' Instantiate random_effects_model object
 #'
-#' This is an S3 object constructor helper function for class random_effects_model which inherics from cpmmc class
+#' This is an S3 object constructor helper function for class random_effects_model which inherics from cpmmc class.
+#' This class uses the normal_log_IS_estimate function to estimate log likelihood using importance sampling.
 #'
+#' @param data, observed data points
+#' @param theta_0, initialisation of the vector of parameters of interest
+#' @param u_0, initialisation of the auxiliary random variables
+#' @param rho, correlation parameter used to sample auxiliary random variables
+#' @param log_theta_prior_density, log density function for the prior distribution of theta, default is the standard Gaussian distribution
+#' @param log_theta_proposal_density, log density function for theta proposals, default is the random walk proposal using the standard Gaussian distribution
+#' @param theta_proposal_sampler, distribution function to sample new theta proposals, default is the standard Gaussian distribution
 #' @return random_effects_model object
 #' @export
 normal_random_effect_model <- function(data,

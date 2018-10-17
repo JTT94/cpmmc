@@ -2,16 +2,18 @@
 % Please edit documentation in R/markov_chain.R
 \name{run_chain}
 \alias{run_chain}
-\title{Generic function to extend the markov chain by a single step}
+\title{Generic function to extend the markov chain by n steps}
 \usage{
 run_chain(object, chain_length)
 }
 \arguments{
-\item{object, }{markov chain object e.g. cpmmc}
+\item{object, }{markov chain object e.g. cpmmc, metropolis_hastings}
+
+\item{chain_length, }{number of simulations for the MCMC algorithm to run}
 }
 \value{
-object, markkov chain object with MC extended by n steps
+object, markov chain object with MC extended by n steps using MCMC algorithms corresponding to the class of the object
 }
 \description{
-Generic function to extend the markov chain by a single step
+Generic function to extend the markov chain by n steps
 }

@@ -10,9 +10,25 @@ normal_random_effect_model(data, theta_0, u_0, rho,
   dnorm(new_theta - old_theta, log = T),
   theta_proposal_sampler = function(theta) rnorm(1, mean = theta))
 }
+\arguments{
+\item{data, }{observed data points}
+
+\item{theta_0, }{initialisation of the vector of parameters of interest}
+
+\item{u_0, }{initialisation of the auxiliary random variables}
+
+\item{rho, }{correlation parameter used to sample auxiliary random variables}
+
+\item{log_theta_prior_density, }{log density function for the prior distribution of theta, default is the standard Gaussian distribution}
+
+\item{log_theta_proposal_density, }{log density function for theta proposals, default is the random walk proposal using the standard Gaussian distribution}
+
+\item{theta_proposal_sampler, }{distribution function to sample new theta proposals, default is the standard Gaussian distribution}
+}
 \value{
 random_effects_model object
 }
 \description{
-This is an S3 object constructor helper function for class random_effects_model which inherics from cpmmc class
+This is an S3 object constructor helper function for class random_effects_model which inherics from cpmmc class.
+This class uses the normal_log_IS_estimate function to estimate log likelihood using importance sampling.
 }

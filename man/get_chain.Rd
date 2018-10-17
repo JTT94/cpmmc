@@ -2,16 +2,16 @@
 % Please edit documentation in R/markov_chain.R
 \name{get_chain}
 \alias{get_chain}
-\title{Generic function to access proposed and/or accepted chains from output of run_mh() function}
+\title{Generic function to access proposed and/or accepted chains from output of run_chain() function}
 \usage{
 get_chain(object, chain)
 }
 \arguments{
-\item{object, }{markov chain object e.g. cpmmc}
+\item{object, }{markov_chain object e.g. cpmmc, metropolis_hastings}
 }
 \value{
 list of parameters of latest accepted state
 }
 \description{
-Generic function to access proposed and/or accepted chains from output of run_mh() function
+Generic function to access proposed and/or accepted chains from output of run_chain() function
 }

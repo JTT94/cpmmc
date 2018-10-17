@@ -9,27 +9,27 @@ cpmmc(data, theta_0, u_0, rho, log_marginal_estimator_func,
   theta_proposal_sampler)
 }
 \arguments{
-\item{data}{observed data points}
+\item{data, }{observed data points}
 
-\item{theta_0}{initialisation of the vector of parameters of interest}
+\item{theta_0, }{initialisation of the vector of parameters of interest}
 
-\item{u_0}{initialisation of the auxiliary random variables}
+\item{u_0, }{initialisation of the auxiliary random variables}
 
-\item{rho}{correlation parameter}
+\item{rho, }{correlation parameter used to sample auxiliary random variables}
 
-\item{log_marginal_estimator_func}{log likelihood estimator function}
+\item{log_marginal_estimator_func, }{log likelihood estimator function}
 
-\item{log_theta_prior_density}{log density function for the prior distribution of theta}
+\item{log_theta_prior_density, }{log density function for the prior distribution of theta}
 
-\item{log_theta_proposal_density}{log density function for theta proposals}
+\item{log_theta_proposal_density, }{log density function for theta proposals}
 
-\item{theta_proposal_sampler}{sampling distribution for theta proposals}
+\item{theta_proposal_sampler, }{distribution function to sample new theta proposals}
 }
 \value{
 cpmmc object
 }
 \description{
-This is an S3 object constructor helper function for class cpmmc
+This is an S3 object constructor helper function for class cpmmc which inherit from metropolis_hastings class and markov_chain class
 }
 \examples{
 cpmmc_obj <- cpmmc(data = rnorm(10, 1, 1),

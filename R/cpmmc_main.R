@@ -5,16 +5,16 @@
 
 #' Instantiate cpmmc object and set initial parameters
 #'
-#' This is an S3 object constructor helper function for class cpmmc
+#' This is an S3 object constructor helper function for class cpmmc which inherit from metropolis_hastings class and markov_chain class
 #'
-#' @param data observed data points
-#' @param theta_0 initialisation of the vector of parameters of interest
-#' @param u_0 initialisation of the auxiliary random variables
-#' @param rho correlation parameter
-#' @param log_marginal_estimator_func log likelihood estimator function
-#' @param log_theta_prior_density log density function for the prior distribution of theta
-#' @param log_theta_proposal_density log density function for theta proposals
-#' @param theta_proposal_sampler sampling distribution for theta proposals
+#' @param data, observed data points
+#' @param theta_0, initialisation of the vector of parameters of interest
+#' @param u_0, initialisation of the auxiliary random variables
+#' @param rho, correlation parameter used to sample auxiliary random variables
+#' @param log_marginal_estimator_func, log likelihood estimator function
+#' @param log_theta_prior_density, log density function for the prior distribution of theta
+#' @param log_theta_proposal_density, log density function for theta proposals
+#' @param theta_proposal_sampler, distribution function to sample new theta proposals
 #' @return cpmmc object
 #' @examples
 #' cpmmc_obj <- cpmmc(data = rnorm(10, 1, 1),
@@ -89,13 +89,13 @@ cpmmc <- function(data,
   obj
 }
 
-#' S3 Implementation of single_mh_step generic method for cpmmc
+#' S3 Implementation of single_transition generic method for cpmmc
 #'
-#' Runs Metropolis Hastings Algorithm to generate a new proposal and accepted state from
+#' Runs correlated pseudo-marginal algorithm once to generate a new proposal and accepted state from
 #'  the latest state of markov chain for cpmmc object, using intrinsic cpmmc proposals
 #'
-#' @param cpmmc object
-#' @return object, with chains of parameters updated
+#' @param object, cpmmc object
+#' @return cpmmc object, with chains of parameters updated by one step of the correlated pseudo-marginal algorithm
 #' @export
 single_transition.cpmmc <- function(object){
   # get current state

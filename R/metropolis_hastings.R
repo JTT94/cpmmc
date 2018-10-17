@@ -1,26 +1,15 @@
 
 
-
-
-
-#' Generic function to run single Metropolis Hastings Step
+#' Instantiate metropolis_hastings object and set initial parameters
 #'
-#' @param object, markov chain object e.g. cpmmc
-#' @return list, proposal state and accepted state
-single_mh_step <- function(object) {
-  UseMethod('single_mh_step')
-}
-
-
-#' Generic function to run Metropolis Hastings algorithm
+#' This is an S3 object constructor helper function for class metropolis_hastings which inherit from markov_chain class
 #'
-#' @param object, markov chain object e.g. cpmmc
-#' @param N, number of samples from posterior
-#' @return list, proposal state and accepted state
-run_mh <- function(object, nsim) {
-  UseMethod('run_mh')
-}
-
+#' @param initial_params, numeric for initial state of chain, list for multiple named parameters
+#' @param log_target_density, the log target density for the MH algorithm, i.e. the log density for the stationary distribution of the Markov Chain
+#' @param log_proposal_density, log density function for parameter proposals
+#' @param proposal_sampler, distribution function to sample new parameter proposals
+#' @return metropolis_hastings object
+#' @export
 
 metropolis_hastings <- function(initial_params, log_target_density, log_proposal_density, proposal_sampler){
 

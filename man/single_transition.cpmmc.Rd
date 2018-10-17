@@ -2,17 +2,17 @@
 % Please edit documentation in R/cpmmc_main.R
 \name{single_transition.cpmmc}
 \alias{single_transition.cpmmc}
-\title{S3 Implementatio of single_mh_step generic method for cpmmc}
+\title{S3 Implementation of single_transition generic method for cpmmc}
 \usage{
 \method{single_transition}{cpmmc}(object)
 }
 \arguments{
-\item{cpmmc}{object}
+\item{object, }{cpmmc object}
 }
 \value{
-object, with chains of parameters updated
+cpmmc object, with chains of parameters updated by one step of the correlated pseudo-marginal algorithm
 }
 \description{
-Runs Metropolis Hastings Algorithm to generate a new proposal and accepted state from
+Runs correlated pseudo-marginal algorithm once to generate a new proposal and accepted state from
  the latest state of markov chain for cpmmc object, using intrinsic cpmmc proposals
 }

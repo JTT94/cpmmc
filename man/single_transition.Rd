@@ -7,10 +7,10 @@
 single_transition(object)
 }
 \arguments{
-\item{object, }{markov chain object e.g. cpmmc}
+\item{object, }{markov_chain object e.g. cpmmc, metropolis_hastings}
 }
 \value{
-object, markkov chain object with MC extended
+object, markov_chain object with MC extended by 1 steps using MCMC algorithms specified by the class of the object
 }
 \description{
 Generic function to extend the markov chain by a single step
