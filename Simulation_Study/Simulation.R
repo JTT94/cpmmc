@@ -206,6 +206,36 @@ serialize_robject("./Simulation_Study/mh_exp5", exp_5_mh)
 
 
 
+# Experiment 6 (5.2)
+# --------------------------------
+## Parameters ----
+
+T_ <- 8192
+N_ <- 56
+rho <- 0.9962
+nsim <- 10^4
+burnin <- 100
+theta_0 <- 0.5
+
+# Generate data and initialise ----
+u_0 <- array(rnorm(T_*N_), dim = c(N_,1,T_))
+data <- rnorm(T_,0.5, sd = sqrt(2))
+
+# Run comparisons
+exp_6_cpm <- simulation_study(T_, N_, theta_0, rho, nsim, burnin, u_0, data)
+# Time elapsed: 23.7850300033887 mins
+exp_6_pm <- simulation_study(T_, N_, theta_0, 0, nsim, burnin, u_0, data)
+# Time elapsed: 24.0089103539785 mins
+mh <- metropolis_hastings(theta_0, log_target_density_theta, log_proposal_density, proposal_sampler)
+mh <- run_chain(mh, nsim)
+# Time elapsed: 6.619749 secs
+exp_6_mh <- mh
+
+serialize_robject("./Simulation_Study/cpm_exp6", exp_6_cpm)
+serialize_robject("./Simulation_Study/pm_exp6", exp_6_pm)
+serialize_robject("./Simulation_Study/mh_exp6", exp_6_mh)
+
+
 
 
 # Experiment 1
@@ -235,7 +265,7 @@ serialize_robject("./Simulation_Study/mh_exp1", long_run_MH)
 
 # Results
 file_templates <- c("./Simulation_Study/mh_exp", "./Simulation_Study/pm_exp","./Simulation_Study/cpm_exp")
-file_locations <- unlist(lapply(1:4, function(x) paste0(file_templates,x)))
+file_locations <- unlist(lapply(1:6, function(x) paste0(file_templates,x)))
 
 results <- list()
 for (fp in file_locations){
