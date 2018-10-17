@@ -1,5 +1,5 @@
 \documentclass{article}
-\usepackage[left=4cm, right=4cm, top=2cm]{geometry}
+\usepackage[left=3cm, right=2.5cm, top=2cm]{geometry}
 \usepackage{amsmath, amsthm, amssymb}
 \usepackage{graphicx}
 \usepackage[round]{natbib}
@@ -33,14 +33,14 @@ This document briefly summarises the statistical methodology underlying the \tex
 
 \section{Background}
 
-The Metropolis-Hastings (MH) algorithm, detailed fully by \cite{roberts2004}, is a particular Markov Chain Monte Carlo (MCMC) procedure used to sample asymptotically from a target distribution, $\pi$, in order to compute expectations with respect to the target distribution. This and similar MCMC procedures are often employed when it is difficult to sample from $\pi$ directly. The outline of MH is that one builds a markov chain with states $ \theta_t $; $ t \in \mathbb{N}$, and stationary distribution $\pi$, coinciding with the desired target distribution. At each time $ t $ , the state is updated stochastically via an acceptance/rejection probability on a proposal state, $\theta^\prime$, generated from some transition kernel, $K$ with density $q$. The acceptance probability is defined as  $ \alpha_E(\theta_{t-1}, \theta^\prime) = min\left\{1,  \frac{
+The Metropolis-Hastings (MH) algorithm, detailed fully by \cite{roberts2004}, is a particular Markov Chain Monte Carlo (MCMC) procedure used to sample asymptotically from a target distribution, $\pi$, in order to compute expectations with respect to the target distribution. This and similar MCMC procedures are often employed when it is difficult to sample from $\pi$ directly. The outline of MH is that one builds a markov chain with states $( \theta_t ; t \in \mathbb{N})$, and stationary distribution $\pi$, coinciding with the desired target distribution. At each time $ t $ , the state is updated stochastically via an acceptance/rejection probability on a proposal state, $\theta^\prime$, generated from some transition kernel, $K$ with density $q$. The acceptance probability is defined as  $ \alpha_E(\theta_{t-1}, \theta^\prime) = min\left\{1,  \frac{
                 \pi(\theta^\prime) q(\theta^\prime, \theta_{t-1})}
                 {\pi(\theta_{t-1}) q(\theta_{t-1}, \theta^\prime)}
 \right\} $. Provided certain ergodic conditions given by \cite{roberts2004} hold, the arithmetic average of accepted states in the generated Markov Chain will approach the desired expectation with respect to $\pi$. \\
 
-In a Bayesian context, MH is often used to sample from a posterior distribution of some parameter of interest, $\theta$. Given observations $y_{1:t}$, and parameter of interest with prior distribution $p$, the target distribution will be of the form $\pi (\theta) = p(\theta | y_{1:t} ) \propto p(y|\theta) p(\theta)$.\\
+In a Bayesian context, MH is often used to sample from a posterior distribution of some parameter of interest, $\theta$. Given observations $y_{1:T}$, and parameter of interest with prior distribution $p$, the target distribution will be of the form $\pi (\theta) = p(\theta | y_{1:T} ) \propto p(y|\theta) p(\theta)$.\\
 
-In order to implement MH for Bayesian inference, one would need to be able to evaluate $p(y|\theta) p(\theta)$ in order to perform the accept/reject step in building the Markov chain. For many applications, such as with latent variable models, the likelihood, $ p(y | \theta)$, is often intractable thus making MH difficult to implement. \\
+To implement MH for Bayesian inference, one would need to be able to evaluate $p(y|\theta) p(\theta)$ in order to perform the acceptance/rejection step in building the Markov chain. For many applications, such as with latent variable models, the likelihood, $ p(y | \theta)$, is often intractable thus making MH difficult to implement. \\
 
 The pseudo-marginal (PM) algorithm follows the same procedure as the idealised MH, however, it introduces an estimator for the intractable likelihood to replace the true likelihood ratio required for the acceptance probability. This reduces the requirement of being able to compute likelihood $p(y|\theta)$, to only being required to be able to compute a non-negative, unbiased, unnormalised Monte Carlo estimate of this likelihood. \\
 
@@ -79,7 +79,7 @@ $\theta^\prime \sim q(\theta_{t-1}, \cdot)$
 \end{algorithm}
 
 
-\subsection{Correlated Pseudo-Marginal Algorithm}
+\subsection{Correlated Pseudo-Marginal Algorithm} \label{cpm}
 To target $\pi$, the CPM first augments the state from $\theta$ to $(\theta, U)$, with joint density $\bar{\pi}$ given as
 $$\bar{\pi}(\theta, u) = \pi(\theta)m(u)\frac{\hat{p}(y_{1:T}| \theta, u)}{p(y_{1:T}| \theta)}$$
 By simulating a Markov chain to target $\bar{\pi}$, one can record only the $\theta$ values in order to target $\pi$. Given that $\hat{p} (y_{1:T} | \theta, U)$ is unbiased, we have that $\pi(\theta)$ is a marginal density of $\bar{\pi} (\theta, u)$, as $\int \bar{\pi}(\theta,u)du = \pi(\theta)$. \\
@@ -195,7 +195,7 @@ We also chooise prior $\theta \sim \mathcal{N}(0,1)$. Under this particular cons
 
 The three algorithms use the same random walk proposal distribution, $ \theta^\prime \sim \mathcal{N}(\theta, 0.02^2)$, where $0.02$ was chosen to coincide with \cite{cpmmDeligiannidis2015}. In addition, we use importance sampling to obtain a non-negative, unbiased estimator for the likelihood, given bellow, to compute the acceptance probabilities for the PM and CPM schemes.\\
 
-The true value for the 'unknown' parameter of interest, $\theta$, is set to be $0.5$ when generating observations $y_{1:T}$.
+The true value for the 'unknown' parameter of interest, $\theta$, is set to be $0.5$ when generating observations $y_{1:T}$. For the CPM algorithm, the likelihood estimator function is given as:
 
 \begin{align}
 \hat{p}(y_{1:T}| \theta, U) =& \prod_{t=1}^{T} \hat{p}(y_t|\theta, U_t) \\
@@ -206,25 +206,26 @@ where $\psi(\cdot; \mu, \sigma^2)$ denotes the density for the Gaussian distribu
 
 \begin{figure}[H]
   \centerline{\includegraphics[scale=1]{experi1_plots}}
-  \label{fig:theFig}
   \caption{Top row (left to right): Trace of $W_T$ (blue) and $Z_T$ (red) against iteration index; Trace of $R_T=W_T-Z_T$; histogram of $Z_T$.  Bottom row: Histogram of R, correlogram of acceptance chain for $\theta$; trace of accepted $\theta$ (blue) vs proposed (red). Where $Z_T$ and $R_T$ are as defined in \eqref{eq:Z} and \eqref{eq:R} and $W_T = \log(\hat{p}(Y_{1:T}| \theta^\prime, U^\prime)) - \log(p(Y_{1:T}|\theta^\prime))$. Data taken from case where $T=8192$ in table \ref{tab:table}}
+  \label{fig:theFig}
 \end{figure}
 
-As seen by the figure above, $R_T$ empirically appears normal, as suggested aluded to in section \ref{norm_dist}. $Z_T$ however, appears far from normally distributed, insinuating a possible lack of convergence or slow convergence.
+As seen by the figure \ref{fig:theFig}, $R_T$ empirically appears normal, as aluded to in section \ref{norm_dist}. $Z_T$ however, appears far from normally distributed, insinuating a possible lack of convergence or slow convergence.
 
 \begin{figure}[H]
   \centerline{\includegraphics[scale=1]{acf_plots}}
-  \label{fig:acf}
   \caption{ACF plots for algorithms MH, CPM, PM. Data taken from case where $T=8192$ in table \ref{tab:table}}
+  \label{fig:acf}
 \end{figure}
 
-As can be seen in the plot above, correlation drops-off as lag is increased at a much higher rate using the CPM compared to PM algorithm, and again quicker in the MH. This would likely insinuate a faster exploration of the state-space, and faster convergence to the target distribution asif the chain remains in a trapped local area, then it would exhibit a slowly decreacing autocorrelation. This is essentially what metric $IF$ \eqref{eq:IF} measures.
+As can be seen in the plot \ref{fig:acf}, correlation drops-off as lag is increased at a much higher rate using the CPM compared to PM algorithm, and again quicker in the MH. This would likely insinuate a faster exploration of the state-space, and faster convergence to the target distribution. If the chain remains in a trapped local area, then it would exhibit slowly decreasing autocorrelation. This is essentially what metric $IF$ \eqref{eq:IF} measures.
 
 \subsection{Benchmarking: MH, CPM, PM}
 
 Table \ref{tab:table} details multiple experiments with various data sizes, $T$, and tuned parameters $\rho$ and $N_T$ across the 3 algorithms: CPM, PM and MH. The table clearly illustrates the higher average acceptance rate for MH over CPM and CPM significantly over PM, and indeed improved (lower) inefficiency scores. This clearly suggests the CPM has noticable benefits over the PM in terms of efficient mixing of the chain, and comparable to the idealised MH, in this toy example. It is still unclear whether these benefits would persist in higher dimensions. It is also certainly worth noting that the CPM algorithm took significantly longer to run than MH.
 
 \begin{table}[H]
+\centering
 \begin{tabular}{|l|ll|lll|lll|}
 \hline
      & \multicolumn{2}{l|}{} & \multicolumn{3}{l|}{Average Acceptance}           & \multicolumn{3}{l|}{Inefficiency Score, $h$} \\
@@ -254,63 +255,68 @@ $T$  & $N_T$     & $\rho$    & $RIF_{CPM}$               & $RIF_{PM}$           
 \end{table}
 
   \section{Discussion}
-    -- Higher dimension, size of M =pTN \\
-    -- Difficulties when estimator is not "nice" i.e. continuous \\
-    -- Implementation weak points, inefficienciesm, have to loop through each data point and sample N for each point
 
+As seen in the simulation study for the random effects model, the correlated pseudo marginal algorithm displays attractive peformance relative to the regular pseudo marginal algorithm. Additionally, the CPM has a lower requirement threshold, in terms of being able to compute the target density, than the idealised Metropolis Hastings and can be a candidate fitting algorithm in many cases where direct MH may not be possible, for example in latent variable models or non-conjugate random effect models. There are however limitations that must be stated.\\
 
-\section{Conclusion}
+  As mentioned informally Section \ref{cpm}, in order for correlated auxiliary variables, $U_t$, to induce correlated likelihood estimators, the estimator function $(\theta, U) \rightarrow \hat{p}(y | \theta, U)$ must be a 'sufficiently regular' function. It may not however always be possible to fulfil this requirements. Indeed, \cite{cpmmDeligiannidis2015} used the particle-filter estimator for a state-space model as an example, as the likelihood ratio estimator does not behave as required even for "close" $(\theta, U)$ and $(\theta\prime, U\prime)$. In such cases, further steps may be required to make the CPM work, eroding efficiency. \cite{cpmmDeligiannidis2015} introduced a resampling scheme procedure based on the Hilbert space-filling curve and the "Particle filter using Hilbert sort" algorithm in order to sample from the state-space model, for example. \\
 
+Similarly, \cite{cpmmDeligiannidis2015} induced correlation in normally distributed auxiliary variables, and required a deterministic mapping from these variables to the latent variables. Although not explored, this may be a cumbersome requirement. We imagine regular importance sampling would also work, however may be less efficient. \\
+
+Although more efficient than the PM algorithm, the CPM can also be computationally expensive, and hence often time-consuming on a single machine. In the case of the random effects model, the CPM scheme requires one to simulate $N$ samples to compute a likelihood estimate using the importance sampling estimator for each observed data point, and this has to be repeated $T$ times to compute the acceptance probability for a single iteration. If the parameter of interest is of dimension $p$, then the CPM algorithm has to simulate $NTp$ random variables per iteration to get one sample, which can be expensive, especially if slow convergence requires many iterations. Per the recommendation, $N_T \propto T^{\frac{1}{2}}$, therefore the algorithm would run at $0(n^{\frac{3}{2}})$. It is possible there are more competitive approximate methods.\\
+
+One further comment is that the parameter tuning heuristic detailed by \cite{cpmmDeligiannidis2015} requires an initial model run. In practice, the suggested procedure is to evaluate $CT(h, Q_{T})$ only on a subset of data, then the parameters can be estimated through regression. However, multiple model runs may deteriorate performance when considered as a whole.\\
+
+Future work may involve considering higher dimensional problems i.e. $p>1$, and parallelising the random effects model algorithm on the importance sampling step, which is the bottle-neck in the implementation.
+
+  % now generate the bibliography from file mybib.bib
+\bibliographystyle{plainnat}
+\bibliography{mybib}
 
 \section{Example code}
 \begin{Schunk}
 \begin{Sinput}
 > library(cpmmc)
 > # Initialise parameters ----
-> T_ <- 100 # small example for demo
-> N_ <- 5
-> rho <- 0.9963
-> nsim <- 10^4
-> burnin <- 100
-> theta_0 <- 0
+> T_ <- 100; N_ <- 5; rho <- 0.9963;
+> nsim <- 10^4; burnin <- 100; theta_0 <- 0
 > u_0 <- array(rnorm(T_*N_), dim = c(N_,1,T_))
 > # Generate data and initialise ----
 > data <- rnorm(T_,0.5, sd = sqrt(2))
 > # Instantiate models ----
-> 
 > # MH (class which class cpmmc inherits from)
+> # For MH
+> # --------------------------------
+> log_target_density <- function(data, theta){
++   (sum(dnorm(data, mean = theta, sd = sqrt(2), log = T))) + dnorm(theta, log = T, sd = 1)
++ }
+> log_target_density_theta <- function(theta){
++   log_target_density(data, theta)
++ }
+> proposal_sampler <- function(state){
++   rnorm(1, mean = state, sd = 0.02)
++ }
+> log_proposal_density <- function(state, proposal){
++   dnorm(proposal, mean = state, log=T, sd = 0.02)
++ }
 > rem_mh <- metropolis_hastings(theta_0, # inital value
 +                           log_target_density_theta,
 +                           log_proposal_density,
 +                           proposal_sampler)
 > # Random Effect CPM (specific case inherited from cpmmc class)
 > rem_cpm <- normal_random_effect_model(data,
-+                                   theta_0 = theta_0,
-+                                   u_0 = u_0,
-+                                   rho = rho,
-+                                   log_theta_prior_density = log_theta_prior_density,
-+                                   log_theta_proposal_density = log_theta_proposal_density,
-+                                   theta_proposal_sampler = theta_proposal_sampler
-+ )
-> # Random Effect PM (specific case inherited from cpmmc class), rho =0
-> rem_pm <- normal_random_effect_model(data,
-+                                   theta_0 = 0,
-+                                   u_0 = u_0,
-+                                   rho = rho,
-+                                   log_theta_prior_density = log_theta_prior_density,
-+                                   log_theta_proposal_density = log_theta_proposal_density,
-+                                   theta_proposal_sampler = theta_proposal_sampler
++             theta_0 = theta_0,
++             u_0 = u_0,
++             rho = rho,
++             log_theta_prior_density = function(x) dnorm(x, log = T, sd = 1),
++             log_theta_proposal_density = function(old_theta, new_theta)
++                                           dnorm(new_theta-old_theta, log = T, sd=0.02),
++             theta_proposal_sampler = function(x) rnorm(1, mean = x, sd = 0.02)
 + )
 > # Run models for nsim iterations
 > rem_mh <- run_chain(rem_mh, chain_length = nsim)
 > rem_cpm <- run_chain(rem_cpm, chain_length = nsim)
-> rem_pm <- run_chain(rem_pm, chain_length = nsim)
-> 
 \end{Sinput}
 \end{Schunk}
-  % now generate the bibliography from file mybib.bib
-\bibliographystyle{plainnat}
-\bibliography{mybib}
 
 
   \end{document}
