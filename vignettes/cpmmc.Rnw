@@ -32,7 +32,7 @@ This document briefly summarises the statistical methodology underlying the \tex
 
 \section{Background}
 
-The Metropolis-Hastings (MH) algorithm, detailed fully by \cite{roberts2004}, is a particular Markov Chain Monte Carlo (MCMC) procedure used to sample asymptotically from a target distribution, $\pi$, in order to compute expectations with respect to the target distribution. This and similar MCMC procedures are often employed when it is difficult to sample from $\pi$ directly. The outline of MH is that one builds a Markov chain with states $( \theta_t ; t \in \mathbb{N})$, and stationary distribution $\pi$, coinciding with the desired target distribution. At each time $ t $ , the state is updated stochastically via an acceptance/rejection probability on a proposal state, $\theta^\prime$, generated from some transition kernel, $K$ with density $q$. The acceptance probability is defined as  $ \alpha_E(\theta_{t-1}, \theta^\prime) = min\left\{1,  \frac{
+The Metropolis-Hastings (MH) algorithm, detailed fully by \cite{roberts2004}, is a particular Markov Chain Monte Carlo (MCMC) procedure used to sample asymptotically from a target distribution, $\pi$, in order to compute expectations with respect to the target distribution. This and similar MCMC procedures are often employed when it is difficult to sample from $\pi$ directly. The outline of MH is that one builds a Markov chain with states $\{\theta_t ; t \in \mathbb{N}\}$, and stationary distribution $\pi$, coinciding with the desired target distribution. At each time $ t $ , the state is updated stochastically via an acceptance/rejection probability on a proposal state, $\theta^\prime$, generated from some transition kernel, $K$ with density $q$. The acceptance probability is defined as  $ \alpha_E(\theta_{t-1}, \theta^\prime) = min\left\{1,  \frac{
                 \pi(\theta^\prime) q(\theta^\prime, \theta_{t-1})}
                 {\pi(\theta_{t-1}) q(\theta_{t-1}, \theta^\prime)}
 \right\} $. Provided certain ergodic conditions given by \cite{roberts2004} hold, the arithmetic average of accepted states in the generated Markov Chain will approach the desired expectation with respect to $\pi$. \\
@@ -51,7 +51,7 @@ The main contributions of \cite{cpmmDeligiannidis2015}, in addition to introduci
 Let $p(y_{1:T}|\theta)$ denote the likelihood for the $T$ observations $y_{1:T}$, and let $p(\theta)$ be the prior density for the parameter $\theta \in \Theta \subseteq \mathbb{R}^{d}$. The Bayesian posterior density of interest can be written as $\pi (\theta) \propto p(y_{1:T}|\theta) p(\theta)$. To further abuse notation, let $x \sim p$ denote sampling realisation x from the distribution with density $p$.\\
 
 \subsection{Metropolis-Hastings}
-In a Bayesian setting, the MH algorithm is as detailed below, the acceptance probability have been rewritten from $\alpha_E(\theta_{t-1}, \theta^\prime) = min\left\{1,  \frac{
+In a Bayesian setting, the MH algorithm is as detailed below, the acceptance probability has been rewritten from $\alpha_E(\theta_{t-1}, \theta^\prime) = min\left\{1,  \frac{
                 \pi(\theta^\prime) q(\theta^\prime, \theta_{t-1})}
                 {\pi(\theta_{t-1}) q(\theta_{t-1}, \theta^\prime)}\right\}$ to
  $ \alpha_E(\theta_{t-1}, \theta^\prime) = min\left\{1,  \frac{
@@ -79,7 +79,7 @@ $\theta^\prime \sim q(\theta_{t-1}, \cdot)$
 
 
 \subsection{Correlated Pseudo-Marginal Algorithm} \label{cpm}
-To target $\pi$, the CPM first augments the state from $\theta$ to $(\theta, U)$, with joint density $\bar{\pi}$ given as
+To target $\pi$, the CPM first augments the state from $\theta$ to $(\theta, U)$, with joint density $\bar{\pi}$ given as:
 $$\bar{\pi}(\theta, u) = \pi(\theta)m(u)\frac{\hat{p}(y_{1:T}| \theta, u)}{p(y_{1:T}| \theta)}$$
 By simulating a Markov chain to target $\bar{\pi}$, one can record only the $\theta$ values in order to target $\pi$. Given that $\hat{p} (y_{1:T} | \theta, U)$ is unbiased, we have that $\pi(\theta)$ is a marginal density of $\bar{\pi} (\theta, u)$, as $\int \bar{\pi}(\theta,u)du = \pi(\theta)$. \\
 
@@ -93,7 +93,7 @@ The Correlated Pseudo Marginal algorithm uses the following assumptions, as well
 
 This framework allows for running MH without having to compute $p(y_{1:T}| \theta)$. The primary difference to the idealised MH algorithm is swapping the likelihood ratio, $\frac{ p(y_{1:T}| \theta, U^\prime)}{ p(y_{1:T}| \theta, U)}$, with its estimator $\frac{ \hat{p}(y_{1:T}| \theta, U^\prime)}{ \hat{p}(y_{1:T}| \theta, U)}$ in the acceptance probability at each iteration. \\
 
-Informally, the intuition behind the CPM, and in particular the correlation aspect, is as follows. Providing $\hat{p}(y_{1:T}| \cdot, \cdot)$ as a function of $(\theta, U)$ is sufficiently "nice" and $\theta$ is close to $\theta^\prime$, correlation amongst $U$ and $U^\prime$ will induce correlation amongst $\hat{p}(y_{1:T}| \theta, U)$ and $\hat{p}(y_{1:T}| \theta^\prime, U^\prime)$. This correlation lowers the variance of the ratio seen in the acceptance probability, $\frac{ \hat{p}(y_{1:T}| \theta, U^\prime)}{ \hat{p}(y_{1:T}| \theta, U)}$. Hence, the algorithm will be "more similar" to the idealised MH algorithm, and reduce the inefficiency introduced by taking estimates rather than computing the exact values of the likelihood.
+Informally, the intuition behind the CPM, and in particular the correlation aspect, is as follows. Providing $\hat{p}(y_{1:T}| \cdot, \cdot)$ as a function of $(\theta, U)$ is sufficiently `nice' and $\theta$ is close to $\theta^\prime$, correlation amongst $U$ and $U^\prime$ will induce correlation amongst $\hat{p}(y_{1:T}| \theta, U)$ and $\hat{p}(y_{1:T}| \theta^\prime, U^\prime)$. This correlation lowers the variance of the ratio seen in the acceptance probability, $\frac{ \hat{p}(y_{1:T}| \theta, U^\prime)}{ \hat{p}(y_{1:T}| \theta, U)}$. Hence, the algorithm will be `more similar' to the idealised MH algorithm, and reduce the inefficiency introduced by taking estimates rather than computing the exact values of the likelihood.
 
 
 \begin{algorithm}[H]
@@ -120,7 +120,7 @@ $ \epsilon \sim \mathcal{N}(0_M, I_M)$ \newline
 \end{algorithmic}
 \end{algorithm}
 
-Notice that by setting $K(u, u\prime) = m(u \prime)$ and let $\rho = 0$ in the CPM algorithm given above, we will obtain the PM algorithm.
+Notice that by setting $K(u, u\prime) = m(u \prime)$ and letting $\rho = 0$ in the CPM algorithm given above, we will obtain the PM algorithm.
 
 \subsection{Random Effect Model}
 
@@ -172,9 +172,7 @@ IF(h, Q_T) =& 1 + 2 \sum_{n=1}^{\infty} \phi_n (h, Q_T) \label{eq:IF}
 \end{align}
 
 
-Let $h$ be some real-valued measurable function. $IF(h, Q_T)$ is a measure of the integrated autocorrelation time of $\{h(\theta_t) ; t \in \mathbb{N}\}$, where $\{\theta_t\}_{t \in \mathbb{N}}$ are generated under Markov kernel $Q_T$.
-
-For $n>0$, $\phi_n$ denotes the autocorrelation at lag $n$. Thus, $IF(h, Q_T)$ provides a measure for inefficiency, and can be used to compare mixing performances between MCMC procedures. \\
+Let $h$ be some real-valued measurable function. $IF(h, Q_T)$ is a measure of the integrated autocorrelation time of $\{h(\theta_t) ; t \in \mathbb{N}\}$, where $\{\theta_t\}_{t \in \mathbb{N}}$ are generated under Markov kernel $Q_T$. For $n>0$, $\phi_n$ denotes the autocorrelation at lag $n$. Thus, $IF(h, Q_T)$ provides a measure for inefficiency, and can be used to compare mixing performances between MCMC procedures. \\
 
 Due to the involved nature, the detailed analysis of the heuristic has been excluded from this document.
 
@@ -182,25 +180,24 @@ Due to the involved nature, the detailed analysis of the heuristic has been excl
   \section{Application}
 
   \subsection{Simulation Study}
-  In order to compare the performance of CPM algorithm with PM and MH algorithms, we first need to introduce the following Gaussian random effects model.
+  In order to compare the performance of CPM algorithm with PM and MH algorithms, we first introduce the following Gaussian random effects model:
 
   \begin{align*}
   X_t &\overset{\text{i.i.d.}}{\sim} N(\theta, 1) \\
   Y_t | X_t &\overset{\hphantom{\text{i.i.d.}}}{\sim} N(X_t, 1)
   \end{align*}
 
-We also chooise prior $\theta \sim \mathcal{N}(0,1)$. Under this particular construction, we can obtain the true likelihood $Y_t \sim N(\theta, 2)$, which not only can be used to directly implement the MH algorithm for benchmarking purposes, but also enables the computation of loglikelihood error and loglikelihood error ratio.\\
+We also choose prior $\theta \sim \mathcal{N}(0,1)$. Under this particular construction, we can obtain the true likelihood $Y_t \sim N(\theta, 2)$, which not only can be used to directly implement the MH algorithm for benchmarking purposes, but also enables the computation of loglikelihood error and loglikelihood error ratio.\\
 
-
-The three algorithms use the same random walk proposal distribution, $ \theta^\prime \sim \mathcal{N}(\theta, 0.02^2)$, where $0.02$ was chosen to coincide with \cite{cpmmDeligiannidis2015}. In addition, we use importance sampling to obtain a non-negative, unbiased estimator for the likelihood, given bellow, to compute the acceptance probabilities for the PM and CPM schemes.\\
-
-The true value for the 'unknown' parameter of interest, $\theta$, is set to be $0.5$ when generating observations $y_{1:T}$. For the CPM algorithm, the likelihood estimator function is given as:
+The three algorithms use the same random walk proposal distribution, $ \theta^\prime \sim \mathcal{N}(\theta, 0.02^2)$, where $0.02$ was chosen to coincide with \cite{cpmmDeligiannidis2015}. In addition, we use importance sampling to obtain a non-negative, unbiased estimator for the likelihood, given bellow, to compute the acceptance probabilities for the PM and CPM schemes.
 
 \begin{align}
 \hat{p}(y_{1:T}| \theta, U) =& \prod_{t=1}^{T} \hat{p}(y_t|\theta, U_t) \\
 \hat{p}(y_t| \theta, U_t)=& \frac{1}{N} \sum_{i=i}^N \psi (y_t; \theta + U_{t,i}, 1)
 \end{align}
-where $\psi(\cdot; \mu, \sigma^2)$ denotes the density for the Gaussian distribution with mean $\mu$ and variance $\sigma^2$, and the auxilary variables $U_{t,i}$ are realisations from independent standard Gaussian distributions.
+where $\psi(\cdot; \mu, \sigma^2)$ denotes the density for the Gaussian distribution with mean $\mu$ and variance $\sigma^2$, and the auxilary variables $U_{t,i}$ are realisations from independent standard Gaussian distributions. \\
+
+The true value for the `unknown' parameter of interest, $\theta$, is set to be $0.5$ when generating observations $y_{1:T}$.
 
 
 \begin{figure}[H]
@@ -221,7 +218,7 @@ As can be seen in the plot \ref{fig:acf}, correlation drops-off as lag is increa
 
 \subsection{Benchmarking: MH, CPM, PM}
 
-Table \ref{tab:table} details multiple experiments with various data sizes, $T$, and tuned parameters $\rho$ and $N_T$ (tuned acording \eqref{eq:n} and \eqref{eq:rho}), to across the 3 algorithms: CPM, PM and MH. The table clearly illustrates the higher average acceptance rate for MH over CPM and CPM significantly over PM, and indeed improved (lower) inefficiency scores. This clearly suggests the CPM has noticable benefits over the PM in terms of efficient mixing of the chain, and comparable to the idealised MH, in this toy example. It is still unclear whether these benefits would persist in higher dimensions. It is also certainly worth noting that the CPM algorithm took significantly longer to run than MH.
+Table \ref{tab:table} and table \ref{tab:RIF} detail multiple experiments with various data sizes, $T$, and tuned parameters $\rho$ and $N_T$ (tuned acording \eqref{eq:n} and \eqref{eq:rho}), across the 3 algorithms: CPM, PM and MH. The table clearly illustrates the higher average acceptance rate for MH over CPM and CPM significantly over PM, and indeed improved (lower) inefficiency scores. This clearly suggests that the CPM has noticable benefits over the PM in terms of efficient mixing of the chain, and comparable to the idealised MH in this toy example. It is still unclear whether these benefits would persist in higher dimensions. It is also certainly worth noting that the CPM algorithm took significantly longer to run than MH.
 
 \begin{table}[H]
 \centering
@@ -251,17 +248,18 @@ $T$  & $N_T$     & $\rho$    & $RIF_{CPM}$               & $RIF_{PM}$           
 8192 & 80        & 0.9963    & 1.2                       & 3.2                     \\ \hline
 \end{tabular}
 \caption{$RIF_x = IF_x/ IF_{MH}$ for algorithm $x$}
+\label{tab:RIF}
 \end{table}
 
   \section{Discussion}
 
 As seen in the simulation study for the random effects model, the correlated pseudo marginal algorithm displays attractive peformance relative to the regular pseudo marginal algorithm. Additionally, the CPM has a lower requirement threshold, in terms of being able to compute the target density, than the idealised Metropolis Hastings and can be a candidate fitting algorithm in many cases where direct MH may not be possible, for example in latent variable models or non-conjugate random effect models. There are however limitations that must be stated.\\
 
-  As mentioned informally Section \ref{cpm}, in order for correlated auxiliary variables, $U_t$, to induce correlated likelihood estimators, the estimator function $(\theta, U) \rightarrow \hat{p}(y | \theta, U)$ must be a 'sufficiently regular' function. It may not however always be possible to fulfil this requirements. Indeed, \cite{cpmmDeligiannidis2015} used the particle-filter estimator for a state-space model as an example, as the likelihood ratio estimator does not behave as required even for "close" $(\theta, U)$ and $(\theta\prime, U\prime)$. In such cases, further steps may be required to make the CPM work, eroding efficiency. \cite{cpmmDeligiannidis2015} introduced a resampling scheme procedure based on the Hilbert space-filling curve and the "Particle filter using Hilbert sort" algorithm in order to sample from the state-space model, for example. \\
+  As mentioned informally Section \ref{cpm}, in order for correlated auxiliary variables, $U_t$, to induce correlated likelihood estimators, the estimator function $(\theta, U) \rightarrow \hat{p}(y | \theta, U)$ must be a `sufficiently regular' function. It may not however always be possible to fulfil this requirements. Indeed, \cite{cpmmDeligiannidis2015} used the particle-filter estimator for a state-space model as an example, as the likelihood ratio estimator does not behave as required even for `close' $(\theta, U)$ and $(\theta^\prime, U^\prime)$. In such cases, further steps may be required to make the CPM work, eroding efficiency. \cite{cpmmDeligiannidis2015} introduced a resampling scheme procedure based on the Hilbert space-filling curve and the `Particle filter using Hilbert sort' algorithm in order to sample from the state-space model, for example. \\
 
 Similarly, \cite{cpmmDeligiannidis2015} induced correlation in normally distributed auxiliary variables, and required a deterministic mapping from these variables to the latent variables. Although not explored, this may be a cumbersome requirement. We imagine regular importance sampling would also work, however may be less efficient. \\
 
-Although more efficient than the PM algorithm, the CPM can also be computationally expensive, and hence often time-consuming on a single machine. In the case of the random effects model, the CPM scheme requires one to simulate $N$ samples to compute a likelihood estimate using the importance sampling estimator for each observed data point, and this has to be repeated $T$ times to compute the acceptance probability for a single iteration. If the parameter of interest is of dimension $p$, then the CPM algorithm has to simulate $NTp$ random variables per iteration to get one sample, which can be expensive, especially if slow convergence requires many iterations. Per the recommendation, $N_T \propto T^{\frac{1}{2}}$, therefore the algorithm would run at $0(n^{\frac{3}{2}})$. It is possible there are more competitive approximate methods.\\
+Although more efficient than the PM algorithm, the CPM can also be computationally expensive, and hence often time-consuming on a single machine. In the case of the random effects model, the CPM scheme requires one to simulate $N$ samples to compute a likelihood estimate using the importance sampling estimator for each observed data point, and this has to be repeated $T$ times to compute the acceptance probability for a single iteration. If the parameter of interest is of dimension $p$, then the CPM algorithm has to simulate $NTp$ random variables per iteration to get one sample, which can be expensive, especially if slow convergence requires many iterations. Per the recommendation, $N_T$ =T^{\frac{1}{2}}$, therefore the algorithm would run at $\mathcal{O}(T^{\frac{3}{2}})$. It is possible there are more competitive approximate methods.\\
 
 One further comment is that the parameter tuning heuristic detailed by \cite{cpmmDeligiannidis2015} requires an initial model run. In practice, the suggested procedure is to evaluate $CT(h, Q_{T})$ only on a subset of data, then the parameters can be estimated through regression. However, multiple model runs may deteriorate performance when considered as a whole.\\
 
