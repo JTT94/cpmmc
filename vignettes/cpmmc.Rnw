@@ -258,43 +258,20 @@ $T$  & $N_T$     & $\rho$    & $RIF_{CPM}$               & $RIF_{PM}$           
     -- Implementation weak points, inefficienciesm, have to loop through each data point and sample N for each point
 
 
-  \section{Conclusion}
+\section{Conclusion}
 
 
 \section{Example code}
-<<fig.height=2>>=
+<<fig.height=2, eval = FALSE >>=
 library(cpmmc)
 # Initialise parameters ----
-T_ <- 8192
-N_ <- 80
+T_ <- 100 # small example for demo
+N_ <- 5
 rho <- 0.9963
 nsim <- 10^4
 burnin <- 100
 theta_0 <- 0
 u_0 <- array(rnorm(T_*N_), dim = c(N_,1,T_))
-
-# Input densities
-# For MH
-# --------------------------------
-
-# density function, with param as current state
-log_target_density <- function(data, theta){
-  (sum(dnorm(data, mean = theta, sd = sqrt(2), log = T))) + dnorm(theta, log = T, sd = 1)
-}
-
-log_target_density_theta <- function(theta){
-  log_target_density(data, theta)
-}
-
-# density function with argument as current state
-log_proposal_density <- function(state, proposal){
-  dnorm(proposal, mean = state, log=T, sd = 0.02)
-}
-
-# sampler function, with argument as current state
-proposal_sampler <- function(state){
-  rnorm(1, mean = state, sd = 0.02)
-}
 
 # Generate data and initialise ----
 data <- rnorm(T_,0.5, sd = sqrt(2))
@@ -312,19 +289,19 @@ rem_cpm <- normal_random_effect_model(data,
                                   theta_0 = theta_0,
                                   u_0 = u_0,
                                   rho = rho,
-                                  log_theta_prior_density = function(x) dnorm(x, log = T, sd = 1),
-                                  log_theta_proposal_density = function(old_theta, new_theta) dnorm(new_theta-old_theta, log = T, sd=0.02),
-                                  theta_proposal_sampler = function(x) rnorm(1, mean = x, sd = 0.02)
+                                  log_theta_prior_density = log_theta_prior_density,
+                                  log_theta_proposal_density = log_theta_proposal_density,
+                                  theta_proposal_sampler = theta_proposal_sampler
 )
 
 # Random Effect PM (specific case inherited from cpmmc class), rho =0
 rem_pm <- normal_random_effect_model(data,
-                                  theta_0 = theta_0,
+                                  theta_0 = 0,
                                   u_0 = u_0,
-                                  rho = 0,
-                                  log_theta_prior_density = function(x) dnorm(x, log = T, sd = 1),
-                                  log_theta_proposal_density = function(old_theta, new_theta) dnorm(new_theta-old_theta, log = T, sd=0.02),
-                                  theta_proposal_sampler = function(x) rnorm(1, mean = x, sd = 0.02)
+                                  rho = rho,
+                                  log_theta_prior_density = log_theta_prior_density,
+                                  log_theta_proposal_density = log_theta_proposal_density,
+                                  theta_proposal_sampler = theta_proposal_sampler
 )
 
 # Run models for nsim iterations
@@ -334,8 +311,8 @@ rem_pm <- run_chain(rem_pm, chain_length = nsim)
 
 @
   % now generate the bibliography from file mybib.bib
-  \bibliographystyle{plainnat}
-  \bibliography{mybib}
+\bibliographystyle{plainnat}
+\bibliography{mybib}
 
 
   \end{document}
