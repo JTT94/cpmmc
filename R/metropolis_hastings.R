@@ -28,7 +28,7 @@ metropolis_hastings <- function(initial_params, log_target_density, log_proposal
   log_acceptance_probability <- function(current_state, proposal_state){
     accept_reject_prob <- log_target_density(proposal_state) +
       log_proposal_density(proposal_state, current_state) -
-      log_target_density(current_state) +
+      log_target_density(current_state) -
       log_proposal_density(current_state,proposal_state)
     return(accept_reject_prob)
   }
