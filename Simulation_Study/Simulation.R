@@ -219,14 +219,35 @@ for (fp in file_locations[2]){
   results[[fp]][['A']] <- acceptance_prob(thetas)
 
 }
-results
+
+results <- unserialize_robject("./Simulation_Study/Results_Summary.blob")
+
+# Long run Plots
+fp <- './Simulation_Study/cpm_exp1'
+thetas <- results[[fp]]$theta
+w <- results[[fp]]$w
+z <- results[[fp]]$z
 mean(thetas)
 # mean(data)
-acf(thetas)
-points(thetas, type='l', col='blue')
-plot(thetas, type='l')
+
+obj <- unserialize_robject('./Simulation_Study/cpm_exp1')
+
+par(mfrow=c(2,3))
+burnin <- 1000
+plot_ind <- burnin:(length(z)-burnin)
+plot(plot_ind + burnin, w[plot_ind], type='l', col ='blue', ylab='', xlab='')
+points(plot_ind + burnin,z[plot_ind], type='l', col='red')
+
+r = w-z
+plot(plot_ind + burnin, r[plot_ind], col='red', type='l', ylab='', xlab='')
+
+hist(z[1000:10^4], breaks = 100, freq = F, main ='Z', xlab ='')
+#hist(w[plot_ind], breaks = 100)
+hist(r, breaks = 100, freq=F, main = 'R', xlab ='')
+acf(thetas, main = '')
 
 
-
-
-
+prop <- sapply(obj$object$proposed_chain, function(x) x[[1]])
+acc <- sapply(obj$object$chain, function(x) x[[1]])
+plot(plot_ind + burnin, prop[plot_ind], col='red', type='l',ylab='', xlab='')
+points(plot_ind + burnin, acc[plot_ind], col='blue', type='l',ylab='', xlab='')

@@ -1,6 +1,7 @@
 \documentclass{article}
 
 \usepackage{amsmath, amsthm, amssymb}
+\usepackage{graphicx}
 \usepackage[round]{natbib}
 \usepackage{hyperref}
 \usepackage{algorithm}
@@ -184,16 +185,28 @@ N_T =& \beta T ^{\frac{1}{2}} \\
   Y_t | X_t &\overset{\hphantom{\text{i.i.d.}}}{\sim} N(X_t, 1)
   \end{align*}
 
-The true value for the parameter of interest, $\theta$, is set to be $0.5$ when simulating observations $y_{1:T}$. All of the three algorithms use the same random walk proposal distribution. Under this particular construction, we can obtain the true likelihood $Y_t \sim N(\theta, 2)$, which not only can be used to directly implement the MH algorithm, but also enables the computation of loglikelihood error and loglikelihood error ratio. In addition, we can use importance sampling to obtain a non-negative, unbiased estimator for the likelihood, given bellow, to compute the acceptance probabilities for the PM and CPM schemes.
+We also chooise prior $\theta \sim \mathcal{N}(0,1)$. Under this particular construction, we can obtain the true likelihood $Y_t \sim N(\theta, 2)$, which not only can be used to directly implement the MH algorithm for benchmarking purposes, but also enables the computation of loglikelihood error and loglikelihood error ratio.\\
+
+
+All of the three algorithms use the same random walk proposal distribution, $ \theta^\prime \sim \mathcal{N}(\theta, 0.02^2)$ . In addition, we use importance sampling to obtain a non-negative, unbiased estimator for the likelihood, given bellow, to compute the acceptance probabilities for the PM and CPM schemes.
+
+The true value for the 'unknown' parameter of interest, $\theta$, is set to be $0.5$ when generating observations $y_{1:T}$.
+
 \begin{align*}
 \hat{p}(y_{1:T}| \theta, U) =& \prod_{t=1}^{T} \hat{p}(y_t|\theta, U_t) \\
 \hat{p}(y_t| \theta, U_t)=& \frac{1}{N} \sum_{i=i}^N \psi (y_t; \theta + U_{t,i}, 1)
 \end{align*}
-where $\psi(\cdot; \mu, \sigma^2)$ denotes the density for the Gaussian distribution with mean $\mu$ and variance $\sigma^2$, and the auxilary variables $U_{t,i}$ are realisations from independent standard Gaussian distributions. \\
+where $\psi(\cdot; \mu, \sigma^2)$ denotes the density for the Gaussian distribution with mean $\mu$ and variance $\sigma^2$, and the auxilary variables $U_{t,i}$ are realisations from independent standard Gaussian distributions.
 
 
-\subsection{Compare CPM with MH and PM}
+\begin{figure}[H]
+  \centerline{\includegraphics[scale=1]{experi1_plots}}
+  \label{fig:theFig}
+  \caption{test}
+\end{figure}
 
+
+\subsection{Benchmarking: MH, CPM, PM}
 
 -- compare $\theta$ estimated by the three algorithms with true value
 -- plots of accepted chains, correlogram
@@ -202,26 +215,30 @@ where $\psi(\cdot; \mu, \sigma^2)$ denotes the density for the Gaussian distribu
 -- efficiency, mixing, burnin time? stiky chains?
 -- the loglikelihood error and loglikelihood error ratios $Z$, $R$ and $W=Z+R$ for PM and CPM
 
-
-
-\subsection{Compare CPM using different $N$ and $T$ values}
-
-
-\begin{table}[h]
-\begin{center}
-\begin{tabular}{ccccccccc}
-\hline \hline
-$T$    & $N$  & $\rho$   & $\kappa^2$ & $\bar{\rho}_{MH}$ & $IF_{MH}$ & $\bar{\rho}_{CPM}$ & $IF_{CPM}$ & $RIF_{CPM}$ \\ \hline
-$1024$ & $19$ & $0.9864$ & $2.0$      &                   &           &                    &            &             \\ \hline
-$2048$ & $28$ & $0.9925$ & $1.9$      &                   &           &                    &            &             \\ \hline
-$4096$ & $39$ & $0.9947$ & $1.7$      &                   &           &                    &            &             \\ \hline \hline
+\begin{table}[H]
+\begin{tabular}{l|ll|lll|lll|}
+\hline
+     & \multicolumn{2}{l|}{} & \multicolumn{3}{l|}{Average Acceptance}           & \multicolumn{3}{l|}{Inefficiency Score, $h$} \\
+$T$  & $N_T$     & $\rho$    & $\varrho_{MH}$ & $\varrho_{CPM}$ & $\varrho_{PM}$ & $IF_{MH}$     & $IF_{CPM}$    & $IF_{PM}$    \\ \hline
+1024 & 19        & 0.9894    & 0.85           & 0.45            & 0.0052         & 18.78         & 27.04         & 78.95        \\
+2048 & 28        & 0.9925    & 0.78           & 0.47            & 0.0044         & 11.96         & 21.65         & 76.56        \\
+4096 & 39        & 0.9947    & 11.91          & 0.44            & 0.0040         & 11.91         & 20.54         & 53.66        \\
+8192 & 80        & 0.9963    & 0.65           & 0.44            & 0.0031         & 19.92         & 24.34         & 64.29        \\ \hline
 \end{tabular}
-\caption{} \label{}
-\end{center}
 \end{table}
 
 
-
+\begin{table}[H]
+\begin{tabular}{l|ll|ll}
+\hline
+     & \multicolumn{2}{l|}{} & \multicolumn{2}{l}{Relative Inefficiency, to $MH$} \\
+$T$  & $N_T$     & $\rho$    & $RIF_{CPM}$              & $RIF_{PM}$              \\ \hline
+1024 & 19        & 0.9894    & 1.44                     & 4.2                     \\
+2048 & 28        & 0.9925    & 1.81                     & 6.4                     \\
+4096 & 39        & 0.9947    & 1.7                      & 4.5                     \\
+8192 & 80        & 0.9963    & 1.2                      & 3.2                     \\ \hline
+\end{tabular}
+\end{table}
 
   \section{Conclusion}
 
