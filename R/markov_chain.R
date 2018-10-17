@@ -117,12 +117,10 @@ single_transition.markov_chain <- function(object){
 #' @export
 run_chain.markov_chain <- function(object, chain_length){
   for (i in seq_len(chain_length)){
-    print(i)
     object <- single_transition(object)
   }
   object
 }
-
 
 
 

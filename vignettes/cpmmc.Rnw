@@ -160,8 +160,8 @@ The significance of these results lies in using them to inform choice of paramet
 In the interest of brevity, the theorems of \cite{cpmmDeligiannidis2015} which state that $Z_T(\theta)$ and $R_T(\theta, \theta^\prime)$ are asympototically normal are not repeated below. However, the key practical implications are that one should find $\beta>0, \psi>0$ and set the CPM parameters such that:
 
 \begin{align}
-N_T =& \beta T ^{\frac{1}{2}} \\
-\rho =& \exp(-\psi \beta T ^ {-\frac{1}{2}}) = \exp(-\psi \frac{N_T}{T})
+N_T =& \beta T ^{\frac{1}{2}} \label{eq:n}\\
+\rho =& \exp(-\psi \beta T ^ {-\frac{1}{2}}) = \exp(-\psi \frac{N_T}{T}) \label{eq:rho}
 \end{align}
 
 \cite{cpmmDeligiannidis2015} then provides a heuristic to find these parameters by minimizing the objective function $CT(h, Q_T)$, detailed below.
@@ -221,7 +221,7 @@ As can be seen in the plot \ref{fig:acf}, correlation drops-off as lag is increa
 
 \subsection{Benchmarking: MH, CPM, PM}
 
-Table \ref{tab:table} details multiple experiments with various data sizes, $T$, and tuned parameters $\rho$ and $N_T$ across the 3 algorithms: CPM, PM and MH. The table clearly illustrates the higher average acceptance rate for MH over CPM and CPM significantly over PM, and indeed improved (lower) inefficiency scores. This clearly suggests the CPM has noticable benefits over the PM in terms of efficient mixing of the chain, and comparable to the idealised MH, in this toy example. It is still unclear whether these benefits would persist in higher dimensions. It is also certainly worth noting that the CPM algorithm took significantly longer to run than MH.
+Table \ref{tab:table} details multiple experiments with various data sizes, $T$, and tuned parameters $\rho$ and $N_T$ (tuned acording \eqref{eq:n} and \eqref{eq:rho}), to across the 3 algorithms: CPM, PM and MH. The table clearly illustrates the higher average acceptance rate for MH over CPM and CPM significantly over PM, and indeed improved (lower) inefficiency scores. This clearly suggests the CPM has noticable benefits over the PM in terms of efficient mixing of the chain, and comparable to the idealised MH, in this toy example. It is still unclear whether these benefits would persist in higher dimensions. It is also certainly worth noting that the CPM algorithm took significantly longer to run than MH.
 
 \begin{table}[H]
 \centering
