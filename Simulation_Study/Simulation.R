@@ -203,7 +203,7 @@ file_templates <- c("./Simulation_Study/mh_exp", "./Simulation_Study/pm_exp","./
 file_locations <- unlist(lapply(1:4, function(x) paste0(file_templates,x)))
 
 results <- list()
-for (fp in file_locations[2]){
+for (fp in file_locations){
   print(fp)
   results[[fp]] <- list()
   object <- unserialize_robject(fp)
