@@ -173,6 +173,41 @@ serialize_robject("./Simulation_Study/cpm_exp4", exp_4_cpm)
 serialize_robject("./Simulation_Study/pm_exp4", exp_4_pm)
 serialize_robject("./Simulation_Study/mh_exp4", exp_4_mh)
 
+
+# Experiment 5
+# --------------------------------
+## Parameters ----
+
+T_ <- 8192
+N_ <- 56
+rho <- 0.9962
+nsim <- 10^4
+burnin <- 100
+theta_0 <- 0
+
+# Generate data and initialise ----
+u_0 <- array(rnorm(T_*N_), dim = c(N_,1,T_))
+data <- rnorm(T_,0.5, sd = sqrt(2))
+
+# Run comparisons
+exp_5_cpm <- simulation_study(T_, N_, theta_0, rho, nsim, burnin, u_0, data)
+# Time elapsed: 23.7469944794973 mins
+exp_5_pm <- simulation_study(T_, N_, theta_0, 0, nsim, burnin, u_0, data)
+# Time elapsed: 23.771907377243 mins
+mh <- metropolis_hastings(theta_0, log_target_density_theta, log_proposal_density, proposal_sampler)
+mh <- run_chain(mh, nsim)
+# Time elapsed: 6.619749 secs
+
+exp_5_mh <- mh
+
+serialize_robject("./Simulation_Study/cpm_exp5", exp_5_cpm)
+serialize_robject("./Simulation_Study/pm_exp5", exp_5_pm)
+serialize_robject("./Simulation_Study/mh_exp5", exp_5_mh)
+
+
+
+
+
 # Experiment 1
 # --------------------------------
 ## Parameters ----
