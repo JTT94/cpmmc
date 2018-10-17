@@ -191,7 +191,7 @@ long_run_CPM <- simulation_study(T_, N_, theta_0, rho, nsum, burnin, u_0, data)
 serialize_robject("./Simulation_Study/cpm_exp1", long_run_CPM)
 # Time elapsed: 34.5729867140452 mins
 long_run_PM <- simulation_study(T_, N_, theta_0, 0, nsum, burnin, u_0, data)
-serialize_robject("./Simulation_Study/pm_exp2", long_run_PM)
+serialize_robject("./Simulation_Study/pm_exp1", long_run_PM)
 # Time elapsed: 29.9212190111478 mins
 mh <- metropolis_hastings(theta_0, log_target_density_theta, log_proposal_density, proposal_sampler)
 long_run_MH <- run_chain(mh, nsim)
@@ -209,10 +209,13 @@ for (fp in file_locations[1]){
   object <- unserialize_robject(fp)
   if (grepl(pattern = 'pm', x = fp)){
     thetas <- sapply(object$object$chain, function(x) x[[1]])
+    results[[fp]][['w']] <- object$w
+    results[[fp]][['z']] <- object$z
   } else if (grepl(pattern = 'mh', x = fp)){
     thetas <- sapply(object$chain, function(x) x[[1]])
   }
   results[[fp]][['IF']] <- h(thetas, max_lag = 40)
+  results[[fp]][['thetas']] <- thetas
   #results[[fp]][['A']] <- acceptance_prob(thetas)
 
 }
