@@ -17,7 +17,7 @@ library(cpmmc)
 vignette('cpmmc', package='cpmmc')
 ```
 
-Example cpde
+Example code:
 
 ```R
 # Random Effect CPM (specific case inherited from cpmmc class)
