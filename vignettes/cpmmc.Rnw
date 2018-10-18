@@ -21,8 +21,6 @@
 \author{James Thornton \and Yuxi Jiang}
 
 \begin{document}
-\SweaveOpts{concordance=TRUE}
-
 
 \maketitle
 
@@ -259,7 +257,7 @@ As seen in the simulation study for the random effects model, the correlated pse
 
 Similarly, \cite{cpmmDeligiannidis2015} induced correlation in normally distributed auxiliary variables, and required a deterministic mapping from these variables to the latent variables. Although not explored, this may be a cumbersome requirement. We imagine regular importance sampling would also work, however may be less efficient. \\
 
-Although more efficient than the PM algorithm, the CPM can also be computationally expensive, and hence often time-consuming on a single machine. In the case of the random effects model, the CPM scheme requires one to simulate $N$ samples to compute a likelihood estimate using the importance sampling estimator for each observed data point, and this has to be repeated $T$ times to compute the acceptance probability for a single iteration. If the parameter of interest is of dimension $p$, then the CPM algorithm has to simulate $NTp$ random variables per iteration to get one sample, which can be expensive, especially if slow convergence requires many iterations. Per the recommendation, $N_T$ =T^{\frac{1}{2}}$, therefore the algorithm would run at $\mathcal{O}(T^{\frac{3}{2}})$. It is possible there are more competitive approximate methods.\\
+Although more efficient than the PM algorithm, the CPM can also be computationally expensive, and hence often time-consuming on a single machine. In the case of the random effects model, the CPM scheme requires one to simulate $N$ samples to compute a likelihood estimate using the importance sampling estimator for each observed data point, and this has to be repeated $T$ times to compute the acceptance probability for a single iteration. If the parameter of interest is of dimension $p$, then the CPM algorithm has to simulate $NTp$ random variables per iteration to get one sample, which can be expensive, especially if slow convergence requires many iterations. Per the recommendation, $N_T =T^{\frac{1}{2}}$, therefore the algorithm would run at $\mathcal{O}(T^{\frac{3}{2}})$. It is possible there are more competitive approximate methods.\\
 
 One further comment is that the parameter tuning heuristic detailed by \cite{cpmmDeligiannidis2015} requires an initial model run. In practice, the suggested procedure is to evaluate $CT(h, Q_{T})$ only on a subset of data, then the parameters can be estimated through regression. However, multiple model runs may deteriorate performance when considered as a whole.\\
 
