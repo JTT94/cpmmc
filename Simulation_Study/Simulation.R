@@ -281,7 +281,7 @@ for (fp in file_locations){
 }
 #Save summary
 serialize_robject('./Simulation_Study/Results_Summary.blob', results)
-
+results <- unserialize_robject('./Simulation_Study/Results_Summary.blob')
 
 # Long run Plots
 #----------------------------------------------
@@ -329,7 +329,7 @@ par(mfrow = c(1,3))
 for (i in seq_along(model_runs)){
   fp <- model_runs[i]
   title <- titles[i]
-  theta <- results[[fp]]$thetas
+  theta <- results[[fp]]$theta
   acf(theta, main = title)
 }
 
