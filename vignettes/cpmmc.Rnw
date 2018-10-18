@@ -187,7 +187,7 @@ Due to the involved nature, the detailed analysis of the heuristic has been excl
 
 We also choose prior $\theta \sim \mathcal{N}(0,1)$. Under this particular construction, we can obtain the true likelihood $Y_t \sim N(\theta, 2)$, which not only can be used to directly implement the MH algorithm for benchmarking purposes, but also enables the computation of loglikelihood error and loglikelihood error ratio.\\
 
-The three algorithms use the same random walk proposal distribution, $ \theta^\prime \sim \mathcal{N}(\theta, 0.02^2)$, where $0.02$ was chosen to coincide with \cite{cpmmDeligiannidis2015}. In addition, we use importance sampling to obtain a non-negative, unbiased estimator for the likelihood, given bellow, to compute the acceptance probabilities for the PM and CPM schemes.
+The three algorithms use the same random walk proposal distribution, $ \theta^\prime|\theta \sim \mathcal{N}(\theta, 0.02^2)$, where $0.02$ was chosen to coincide with \cite{cpmmDeligiannidis2015}. In addition, we use importance sampling to obtain a non-negative, unbiased estimator for the likelihood, given bellow, to compute the acceptance probabilities for the PM and CPM schemes.
 
 \begin{align}
 \hat{p}(y_{1:T}| \theta, U) =& \prod_{t=1}^{T} \hat{p}(y_t|\theta, U_t) \\
@@ -199,7 +199,7 @@ The true value for the `unknown' parameter of interest, $\theta$, is set to be $
 
 
 \begin{figure}[H]
-  \centerline{\includegraphics[scale=1]{experi1_plots}}
+  \centerline{\includegraphics[scale=1]{experi1_plots.pdf}}
   \caption{Top row (left to right): Trace of $W_T$ (blue) and $Z_T$ (red) against iteration index; Trace of $R_T=W_T-Z_T$; histogram of $Z_T$.  Bottom row: Histogram of R, correlogram of acceptance chain for $\theta$; trace of accepted $\theta$ (blue) vs proposed (red). Where $Z_T$ and $R_T$ are as defined in \eqref{eq:Z} and \eqref{eq:R} and $W_T = \log(\hat{p}(Y_{1:T}| \theta^\prime, U^\prime)) - \log(p(Y_{1:T}|\theta^\prime))$. Data taken from case where $T=8192$ in table \ref{tab:table}}
   \label{fig:theFig}
 \end{figure}
@@ -207,7 +207,7 @@ The true value for the `unknown' parameter of interest, $\theta$, is set to be $
 As seen by the figure \ref{fig:theFig}, $R_T$ empirically appears normal, as alluded to in section \ref{norm_dist}. $Z_T$ however, appears far from normally distributed, insinuating a possible lack of convergence or slow convergence.
 
 \begin{figure}[H]
-  \centerline{\includegraphics[scale=1]{acf_plots}}
+  \centerline{\includegraphics[scale=1]{acf_plots.pdf}}
   \caption{ACF plots for algorithms MH, CPM, PM. Data taken from case where $T=8192$ in table \ref{tab:table}}
   \label{fig:acf}
 \end{figure}
