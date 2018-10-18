@@ -16,3 +16,16 @@ Vignette help can be found as follows:
 library(cpmmc)
 vignette('cpmmc', package='cpmmc')
 ```
+
+Example cpde
+
+```R
+# Random Effect CPM (specific case inherited from cpmmc class)
+rem_cpm <- normal_random_effect_model(data,
+theta_0 = theta_0,
+u_0 = u_0,
+rho = rho
+)
+# Run models for nsim iterations
+rem_cpm <- run_chain(rem_cpm, chain_length = nsim)
+```
