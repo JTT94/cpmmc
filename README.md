@@ -4,7 +4,7 @@
 
 An R package to perform the Correlated Pseudo Marginal Method, see paper detailing methodology [here](https://arxiv.org/abs/1511.04992)
 
-Undertaken as part of the 1 week OxWaSP project: “Statistical Computing and Computational Statistics”
+Undertaken as part of the 1 week OxWaSP module: “Statistical Computing and Computational Statistics”
 
 In partnership with Yuxi Jiang, OxWaSP- University of Warwick
 
