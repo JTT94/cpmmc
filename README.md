@@ -8,7 +8,8 @@ Undertaken as part of the 1 week OxWaSP module: “Statistical Computing and Com
 
 In partnership with Yuxi Jiang, OxWaSP- University of Warwick
 
-[Report](https://github.com/JTT94/cpmmc/blob/master/vignettes/cpmmc.pdf) \\
+[Report](https://github.com/JTT94/cpmmc/blob/master/vignettes/cpmmc.pdf) 
+
 [Presentation](https://github.com/JTT94/cpmmc/blob/master/Correlated_Pseudo_Marginal_Monte_Carlo.pdf)
 
 --------------------------------------
